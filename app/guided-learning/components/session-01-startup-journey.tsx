@@ -1,5 +1,7 @@
 'use client';
 
+import { TaskInstruction } from './task-instruction';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   STARTUP_STORIES,
@@ -169,9 +171,7 @@ function TaskCard({
       </div>
 
       {/* Task Instruction (1-2 sentences) */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      <TaskInstruction text={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
