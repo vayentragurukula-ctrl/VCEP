@@ -312,17 +312,17 @@ export interface Session13State {
 
 export const DEFAULT_SESSION_13_STATE: Session13State = {
   classification: {},
-  promptArchitecture: { ...DEFAULT_PROMPT_ARCHITECTURE },
+  promptArchitecture: { role: '', task: '', permittedSources: '', outputStructure: '', uncertaintyRule: '', explicitExclusions: '' },
   promptCopied: false,
   activeAIResponse: OFFLINE_FLAWED_DRAFT_TEXT,
   verificationChecks: {},
-  revisedMemo: { ...DEFAULT_REVISED_MEMO },
-  governanceLog: { ...DEFAULT_AI_GOVERNANCE_LOG },
+  revisedMemo: { revenueBullet: '', marginBullet: '', workingCapitalBullet: '', recommendationBullet: '' },
+  governanceLog: { aiToolAndDate: '', permittedInputRef: '', promptArchitectureRef: '', generatedDraftRef: '', humanFactChecksSummary: '', humanReviewerName: '', autonomousHumanDecision: '' },
   selfRubricScores: {
-    'R01_MINIMIZATION': 1,
-    'R02_PROMPT_BOUNDING': 1,
-    'R03_VERIFICATION': 1,
-    'R04_AUDIT_LOG': 1,
+    'R01_MINIMIZATION': 0,
+    'R02_PROMPT_BOUNDING': 0,
+    'R03_VERIFICATION': 0,
+    'R04_AUDIT_LOG': 0,
   },
   lastSavedAt: null,
 };
