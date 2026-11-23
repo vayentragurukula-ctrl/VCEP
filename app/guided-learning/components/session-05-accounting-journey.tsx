@@ -10,7 +10,7 @@ import {
   TARGET_JOURNAL_TOTAL,
   CHART_OF_ACCOUNTS,
   CASE_A_VOUCHERS,
-  INITIAL_JOURNAL_ROWS,
+  STUDENT_JOURNAL_ROWS,
   INITIAL_S05_STATE,
   S05_RUBRIC,
   countWords,
@@ -325,10 +325,10 @@ export function Session05AccountingJourney({
   };
 
   const handleResetToApprovedEntries = () => {
-    if (window.confirm('Reset journal rows back to canonical Case A approved entries?')) {
+    if (window.confirm('Clear your draft journal entries and start the Case A exercise again? Existing official submissions are not changed.')) {
       updateState((prev) => ({
         ...prev,
-        rows: INITIAL_JOURNAL_ROWS,
+        rows: STUDENT_JOURNAL_ROWS,
       }));
     }
   };
@@ -765,7 +765,7 @@ export function Session05AccountingJourney({
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  Reset Approved Rows
+                  Clear My Journal
                 </button>
                 <button
                   type="button"
@@ -947,13 +947,15 @@ export function Session05AccountingJourney({
                               <td className="py-3 px-3 text-center">
                                 {issue ? (
                                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">
-                                    <AlertTriangle className="w-3 h-3" />
-                                    Flagged
+                                    <AlertTriangle className="w-3 h-3" /> Flagged
+                                  </span>
+                                ) : !row.debitAccount || !row.creditAccount ? (
+                                  <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">
+                                    Not entered
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                                    <CheckCircle2 className="w-3 h-3" />
-                                    Verified
+                                  <span className="inline-flex px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800">
+                                    Entered · Check in review
                                   </span>
                                 )}
                               </td>
