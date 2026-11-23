@@ -262,37 +262,49 @@ export function Session17DiscoveryJourney({ onUpdateDraft }: Session17DiscoveryJ
   const [activeTaskId, setActiveTaskId] = useState<string>('S17-T01');
   const [reviewReport, setReviewReport] = useState<SessionReviewReport | null>(null);
 
-  // Initial mount sync
+  const studentEvidence = (current: Session17State): Record<string, string> => {
+    const answeredQuestions = current.questions
+      .filter(q => q.stakeholderAnswer.trim() || q.evidenceRequired.trim())
+      .map(q => `${q.id}: ${q.stakeholderAnswer} | Evidence: ${q.evidenceRequired}`).join('\n');
+    const supportedAssumptions = current.assumptions
+      .filter(a => a.assumptionText.trim() || a.invalidationTrigger.trim() || a.evidenceMitigation.trim())
+      .map(a => `${a.id}: ${a.assumptionText} | Invalidation: ${a.invalidationTrigger} | Mitigation: ${a.evidenceMitigation}`).join('\n');
+    return {
+      'concept:explain': current.problemStatement,
+      'work-prompt:0': answeredQuestions,
+      'work-prompt:1': current.problemStatement,
+      'work-prompt:2': supportedAssumptions,
+      'team:judgement': current.nextDiscoveryAction,
+      'problem:statement': current.problemStatement,
+      'next:action': current.nextDiscoveryAction,
+      'workstation:s17-evidence': JSON.stringify({
+        questions: current.questions,
+        permissions: current.permissions,
+        assumptions: current.assumptions,
+        problemStatement: current.problemStatement,
+        nextDiscoveryAction: current.nextDiscoveryAction,
+      }),
+    };
+  };
+
+  const sendStudentEvidence = (current: Session17State) => {
+    if (!onUpdateDraft) return;
+    for (const [key, value] of Object.entries(studentEvidence(current))) {
+      onUpdateDraft(key, value);
+    }
+  };
+
   useEffect(() => {
     const loaded = loadSession17State();
     setState(loaded);
-    if (onUpdateDraft) {
-      onUpdateDraft('concept:explain', 'Discovery separates client symptoms (requesting an AI dashboard) from root operational causes (imminent ₹20k payroll deficit). A 5-element problem statement specifies Persona, Problem, Evidence, Consequence, and Success Metric while respecting strict dataset boundaries.');
-      onUpdateDraft('work-prompt:0', 'Documented 8 discovery questions covering user personas, high-stakes decisions, verified data sources, system join limitations, aging rules, dispute quarantine, scope boundaries, and measurable success metrics.');
-      onUpdateDraft('work-prompt:1', loaded.problemStatement);
-      onUpdateDraft('work-prompt:2', 'Documented 3 critical invalidating assumptions and defined next discovery action.');
-      onUpdateDraft('team:contribution', 'Conducted structured discovery interview with simulated founder, mapped Case F and G datasets separately, drafted 80-word problem statement, and verified data permissions.');
-      onUpdateDraft('team:judgement', loaded.governance.decisionOwnerName);
-      onUpdateDraft('problem:statement', loaded.problemStatement);
-      onUpdateDraft('next:action', loaded.nextDiscoveryAction);
-    }
+    sendStudentEvidence(loaded);
   }, []);
 
-  // Update state helper with auto-persistence and draft sync
   const updateState = (updater: (prev: Session17State) => Session17State) => {
     setState((prev) => {
       const next = updater(prev);
       saveSession17State(next);
-      if (onUpdateDraft) {
-        onUpdateDraft('concept:explain', 'Discovery separates client symptoms (requesting an AI dashboard) from root operational causes (imminent ₹20k payroll deficit). A 5-element problem statement specifies Persona, Problem, Evidence, Consequence, and Success Metric while respecting strict dataset boundaries.');
-        onUpdateDraft('work-prompt:0', 'Documented 8 discovery questions covering user personas, high-stakes decisions, verified data sources, system join limitations, aging rules, dispute quarantine, scope boundaries, and measurable success metrics.');
-        onUpdateDraft('work-prompt:1', next.problemStatement);
-        onUpdateDraft('work-prompt:2', 'Documented 3 critical invalidating assumptions and defined next discovery action.');
-        onUpdateDraft('team:contribution', 'Conducted structured discovery interview with simulated founder, mapped Case F and G datasets separately, drafted 80-word problem statement, and verified data permissions.');
-        onUpdateDraft('team:judgement', next.governance.decisionOwnerName);
-        onUpdateDraft('problem:statement', next.problemStatement);
-        onUpdateDraft('next:action', next.nextDiscoveryAction);
-      }
+      sendStudentEvidence(next);
       return next;
     });
   };
@@ -352,16 +364,7 @@ export function Session17DiscoveryJourney({ onUpdateDraft }: Session17DiscoveryJ
   const handleRunReview = () => {
     const ctx = {
       sessionId: 17,
-      draft: {
-        'concept:explain': 'Discovery separates client symptoms (requesting an AI dashboard) from root operational causes (imminent ₹20k payroll deficit). A 5-element problem statement specifies Persona, Problem, Evidence, Consequence, and Success Metric while respecting strict dataset boundaries.',
-        'work-prompt:0': 'Documented 8 discovery questions covering user personas, high-stakes decisions, verified data sources, system join limitations, aging rules, dispute quarantine, scope boundaries, and measurable success metrics.',
-        'work-prompt:1': state.problemStatement,
-        'work-prompt:2': 'Documented 3 critical invalidating assumptions and defined next discovery action.',
-        'team:contribution': 'Conducted structured discovery interview with simulated founder, mapped Case F and G datasets separately, drafted 80-word problem statement, and verified data permissions.',
-        'team:judgement': state.governance.decisionOwnerName,
-        'problem:statement': state.problemStatement,
-        'next:action': state.nextDiscoveryAction,
-      },
+      draft: studentEvidence(state),
       workstationData: {
         questions: state.questions,
         problemStatement: state.problemStatement,
