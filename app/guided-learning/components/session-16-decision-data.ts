@@ -216,7 +216,7 @@ export interface Session16State {
   sliderVolume: number;
   extraFixedCost: number;
   enteredMinSeats: string;
-  decisionRecommendation: 'REJECT' | 'CONDITIONAL' | 'COUNTER';
+  decisionRecommendation: 'UNDECIDED' | 'REJECT' | 'CONDITIONAL' | 'COUNTER';
   decisionMemo: string;
   evidenceRequirements: string;
   governance: Session16Governance;
@@ -228,7 +228,7 @@ export const DEFAULT_SESSION_16_STATE: Session16State = {
   sliderVolume: 30,
   extraFixedCost: 0,
   enteredMinSeats: '',
-  decisionRecommendation: 'COUNTER',
+  decisionRecommendation: 'UNDECIDED',
   decisionMemo: '',
   evidenceRequirements: '',
   governance: {
