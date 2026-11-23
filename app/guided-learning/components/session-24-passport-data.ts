@@ -337,11 +337,11 @@ export const S24_RUBRIC = [
 
 export const DEFAULT_SESSION_24_STATE: Session24State = {
   runOfShow: INITIAL_RUN_OF_SHOW,
-  exhibits: INITIAL_EXHIBITS,
-  defense: INITIAL_DEFENSE,
-  passport: INITIAL_PASSPORT_COMPETENCIES,
-  careerPlan: INITIAL_CAREER_PLAN_90_DAY,
-  scorecard: INITIAL_SCORECARD,
+  exhibits: INITIAL_EXHIBITS.map(x => ({ ...x, keyMetric: '', fileLink: '' })),
+  defense: { ...INITIAL_DEFENSE, personalContribution: '', defectCorrectionHistory: '', technicalMethodology: '', scopeLimitations: '' },
+  passport: INITIAL_PASSPORT_COMPETENCIES.map(x => ({ ...x, verifiedArtifactId: '', demonstratedProof: '', facultyEvaluationStatus: 'PENDING' as const, certifiedDate: '' })),
+  careerPlan: INITIAL_CAREER_PLAN_90_DAY.map(x => ({ ...x, actionTitle: '', actionPlan: '', evidenceOfProgress: '', targetDueDate: '' })),
+  scorecard: INITIAL_SCORECARD.map(x => ({ ...x, awardedMarks: 0, judgeComment: '' })),
   conflictCheckCertified: false,
   studentContribution: '',
   reviewerCorrection: '',
