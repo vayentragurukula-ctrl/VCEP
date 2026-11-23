@@ -125,8 +125,8 @@ export interface PurchaseRegisterItem {
   taxableAmount: number;
   bookTax: number;
   statementTax: number | 'Not present';
-  reconciliationStatus: 'Matched' | 'Unmatched / Exception';
-  itcAction: 'Eligible for Verification' | 'Quarantine ITC & Escalate';
+  reconciliationStatus: '' | 'Matched' | 'Unmatched / Exception';
+  itcAction: '' | 'Eligible for Verification' | 'Quarantine ITC & Escalate';
   riskAnalysis: string;
 }
 
@@ -213,7 +213,7 @@ export interface Session11WorkstationState {
       checkedPos: boolean;
       checkedTaxType: boolean;
       checkedValue: boolean;
-      studentStatus: 'Compliant' | 'Defect: Wrong Tax Type' | 'Defect: Missing Serial';
+      studentStatus: '' | 'Compliant' | 'Defect: Wrong Tax Type' | 'Defect: Missing Serial';
       studentNotes: string;
     };
   };
@@ -261,58 +261,25 @@ export const DEFAULT_MENTOR_NOTE =
 export const INITIAL_S11_STATE: Session11WorkstationState = {
   selectedInvoiceTab: 'E01',
   invoiceAudits: {
-    E01: {
-      checkedSerial: true,
-      checkedPos: true,
-      checkedTaxType: true,
-      checkedValue: true,
-      studentStatus: 'Compliant',
-      studentNotes: 'Intra-state supply within Karnataka correctly charged at 9% CGST (₹900) and 9% SGST (₹900). Total ₹11,800 is verified.',
-    },
-    E02: {
-      checkedSerial: true,
-      checkedPos: true,
-      checkedTaxType: true,
-      checkedValue: true,
-      studentStatus: 'Defect: Wrong Tax Type',
-      studentNotes: 'Inter-state transaction (Place of Supply: Tamil Nadu). Reclassified from draft CGST/SGST to 18% IGST (₹3,600). Total ₹23,600.',
-    },
-    E03: {
-      checkedSerial: false,
-      checkedPos: true,
-      checkedTaxType: true,
-      checkedValue: true,
-      studentStatus: 'Defect: Missing Serial',
-      studentNotes: 'Missing mandatory tax invoice serial number. Under Rule 46, invoice cannot be issued or dispatched until numbered.',
-    },
+    E01: { checkedSerial: false, checkedPos: false, checkedTaxType: false, checkedValue: false, studentStatus: '', studentNotes: '' },
+    E02: { checkedSerial: false, checkedPos: false, checkedTaxType: false, checkedValue: false, studentStatus: '', studentNotes: '' },
+    E03: { checkedSerial: false, checkedPos: false, checkedTaxType: false, checkedValue: false, studentStatus: '', studentNotes: '' },
   },
   purchaseAudits: {
-    P01: {
-      reconciliationStatus: 'Matched',
-      itcAction: 'Eligible for Verification',
-      studentNotes: 'Present in GSTR-2B (₹180). Eligible for credit verification upon receipt confirmation.',
-    },
-    P02: {
-      reconciliationStatus: 'Unmatched / Exception',
-      itcAction: 'Quarantine ITC & Escalate',
-      studentNotes: 'Absent from GSTR-2B. Quarantined ₹360 ITC and issued vendor escalation query.',
-    },
-    P03: {
-      reconciliationStatus: 'Matched',
-      itcAction: 'Eligible for Verification',
-      studentNotes: 'Present in GSTR-2B (₹540). Eligible for credit verification upon receipt confirmation.',
-    },
+    P01: { reconciliationStatus: '', itcAction: '', studentNotes: '' },
+    P02: { reconciliationStatus: '', itcAction: '', studentNotes: '' },
+    P03: { reconciliationStatus: '', itcAction: '', studentNotes: '' },
   },
-  vendorEscalationMemo: DEFAULT_VENDOR_MEMO,
-  mentorQueryNote: DEFAULT_MENTOR_NOTE,
+  vendorEscalationMemo: '',
+  mentorQueryNote: '',
   governance: {
     studentId: 'STU-2026-1102',
     fileVersion: 'StudentID_S11_v01.xlsx',
-    taxPreparer: 'Aarav Tax Analyst',
-    taxReviewer: 'Priya Senior Reviewer',
-    decisionOwner: 'Finance Controller',
+    taxPreparer: '',
+    taxReviewer: '',
+    decisionOwner: '',
   },
-  checkedIndices: [0, 1, 2, 3, 4, 5],
+  checkedIndices: [],
 };
 
 export const S11_RUBRIC = [
