@@ -733,6 +733,7 @@ export function Session11GSTJourney({ onUpdateDraft }: Session11GSTJourneyProps)
                       color: activeAudit.studentStatus === 'Compliant' ? '#15803d' : '#b91c1c',
                     }}
                   >
+                    <option value="">Choose your verdict</option>
                     <option value="Compliant">Compliant — Approve for Posting & Dispatch</option>
                     <option value="Defect: Wrong Tax Type">Defect: Wrong Tax Type (Reclassify to IGST)</option>
                     <option value="Defect: Missing Serial">Defect: Missing Serial (Hold under Rule 46)</option>
@@ -980,6 +981,7 @@ export function Session11GSTJourney({ onUpdateDraft }: Session11GSTJourneyProps)
                               border: '1px solid #cbd5e1',
                             }}
                           >
+                            <option value="">Select status</option>
                             <option value="Matched">Matched</option>
                             <option value="Unmatched / Exception">Unmatched / Exception</option>
                           </select>
@@ -998,6 +1000,7 @@ export function Session11GSTJourney({ onUpdateDraft }: Session11GSTJourneyProps)
                               border: '1px solid #cbd5e1',
                             }}
                           >
+                            <option value="">Select action</option>
                             <option value="Eligible for Verification">Eligible for Verification</option>
                             <option value="Quarantine ITC & Escalate">Quarantine ITC & Escalate</option>
                           </select>
