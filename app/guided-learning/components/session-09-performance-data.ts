@@ -132,26 +132,18 @@ export const INITIAL_S09_STATE: Session09WorkstationState = {
     profitGrowthMoM: 11.1,
     marginPpChangeMoM: -5.0,
   },
-  findings: [
-    '1. Severe Gross Margin Compression: While revenue grew 25.0% MoM to ₹1,50,000, direct delivery costs escalated by 38.9% to ₹75,000. As a direct consequence, Gross Margin fell by 5.0 percentage points from August (55.0% to 50.0%) and 10.0 percentage points from July (60.0% to 50.0%), proving that incremental volume is significantly less profitable.',
-    '2. Decoupling of Revenue and Operating Profit: Top-line revenue expanded 25.0% from August to September, but operating profit grew by only 11.1% (₹27,000 to ₹30,000), resulting in an operating margin erosion from 22.5% to 20.0%. Growth is diluting unit profitability rather than generating operating leverage.',
-    '3. Critical Trade Receivables Lockup: Closing accounts receivable jumped by 55.6% MoM from ₹45,000 to ₹70,000 (+133.3% since July). Receivables now represent 46.7% of total September revenue. The company is generating paper billing growth without collecting operational cash, creating severe working capital risk.',
-  ],
-  uncertainty:
-    'Case D supplies financial totals net of tax but does not disclose whether direct cost escalation was caused by unapproved sales discounting, raw material price surges, or delivery inefficiencies. Furthermore, collection dates and customer credit terms are missing from the data release.',
-  investigation:
-    'Finance Lead to extract a 30/60/90-day Debtor Aging Schedule by Friday to identify overdue accounts, and audit supplier purchase orders against contract billing rates to isolate the specific operational drivers of direct cost expansion.',
-  executiveBriefing:
-    'Executive Summary: Management’s assumption that 25% revenue growth proves business health is dangerously flawed. Growth has been accompanied by a 10.0 percentage point gross margin collapse and a ₹70,000 receivables buildup. We recommend halting expansion bonuses until cash collection is verified and direct delivery cost drivers are audited.',
-  peerDefenseNote:
-    'Sales argues that +25% revenue expansion justifies higher commission payouts. Finance counters that each new rupee of revenue costs 50 paise in direct costs (up from 40 paise in July) while ₹70,000 remains unpaid on customer accounts. Growth without cash collection and margin discipline threatens company solvency.',
+  findings: ['', '', ''],
+  uncertainty: '',
+  investigation: '',
+  executiveBriefing: '',
+  peerDefenseNote: '',
   governance: {
     studentId: 'STU-2026-0922',
     fileVersion: 'StudentID_S09_v01.xlsx',
     preparerRole: 'Corporate Financial Analyst',
     reviewerRole: 'Senior Finance Controller',
   },
-  checkedIndices: [0, 1, 2, 3, 4, 5],
+  checkedIndices: [],
 };
 
 export const S09_RUBRIC = [
