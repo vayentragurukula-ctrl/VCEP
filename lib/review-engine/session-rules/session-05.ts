@@ -99,12 +99,12 @@ export function evaluateSession05(ctx: ReviewContext): SessionReviewReport {
 
   // Check 2: Balance Check (₹208,500 Dr = ₹208,500 Cr)
   const totalDebits = rows.reduce((sum: number, r: any) => sum + (Number(r.amount) || 0), 0);
-  const isBalanced = totalDebits === 208500;
+  const isBalanced = allAccountsAssigned && totalDebits === 208500;
 
   workChecks.push({
     id: 's05-w2-balance',
     title: 'Double-Entry Balancing & Cross-Foot Verification',
-    description: 'Verify that total journal debits equal total credits of ₹208,500 with zero reconciliation variance.',
+    description: 'Only completed debit/credit classifications can count toward the ₹208,500 journal balance; a preprinted amount alone is not a completed journal.',
     passed: isBalanced,
     status: isBalanced ? 'passed' : totalDebits > 0 ? 'failed' : 'pending',
     studentValue: isBalanced ? '₹208,500 (Balanced · Zero Variance)' : `₹${totalDebits.toLocaleString('en-IN')} (Target: ₹208,500)`,
