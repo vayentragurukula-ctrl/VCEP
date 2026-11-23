@@ -233,6 +233,7 @@ export function Session05AccountingJourney({
       onUpdateDraft('concept:explain', loaded.exceptionsNotes);
       onUpdateDraft('team:contribution', loaded.governance.contributionSummary);
       onUpdateDraft('team:judgement', loaded.governance.professionalBoundary);
+      onUpdateDraft('workstation:s05-journal', JSON.stringify({ journal: loaded.rows.map(r => ({ docId: r.docId, debit: r.debitAccount, credit: r.creditAccount, amount: r.amount })), notes: loaded.exceptionsNotes }));
     }
   }, []);
 
@@ -247,6 +248,7 @@ export function Session05AccountingJourney({
         onUpdateDraft('concept:explain', next.exceptionsNotes);
         onUpdateDraft('team:contribution', next.governance.contributionSummary);
         onUpdateDraft('team:judgement', next.governance.professionalBoundary);
+        onUpdateDraft('workstation:s05-journal', JSON.stringify({ journal: next.rows.map(r => ({ docId: r.docId, debit: r.debitAccount, credit: r.creditAccount, amount: r.amount })), notes: next.exceptionsNotes }));
       }
 
       return next;
