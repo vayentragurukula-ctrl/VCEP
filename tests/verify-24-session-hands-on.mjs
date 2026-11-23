@@ -53,7 +53,7 @@ assert.match(data(21),/status: 'Practice Candidate'/,'S21: unverified student ev
 assert.match(data(22),/auditStatus: 'Awaiting official faculty assessment'/,'S22: no pre-issued exit score');
 assert.doesNotMatch(data(22), /candidateDefense/, 'S22: model interview answers must not be bundled for students');
 const s22View = readFileSync('app/guided-learning/components/session-22-hiring-journey.tsx','utf8');
-assert.doesNotMatch(s22View, /active\\.candidateDefense/, 'S22: interview answers must not render on the learner page');
+assert.doesNotMatch(s22View, /active\.candidateDefense/, 'S22: interview answers must not render on the learner page');
 assert.match(data(24),/humanAcknowledged: false/,'S24: no pre-certified Industry Passport');
 console.log('PASS: 24 connected workstations, 95 numbered task cards, concise/full instructions and critical ungraded defaults.');
 console.log('NOTE: This structural audit does not certify runtime behavior, private curriculum accuracy or official assessment results.');
