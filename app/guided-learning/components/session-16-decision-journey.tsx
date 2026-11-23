@@ -255,51 +255,37 @@ export function Session16DecisionJourney({ onUpdateDraft }: Session16DecisionJou
   const [reviewReport, setReviewReport] = useState<SessionReviewReport | null>(null);
   const [activeTaskId, setActiveTaskId] = useState<string>('S16-T01');
 
-  // Initial mount sync
+  // Only send actual student-entered work to the official draft. Case reference
+  // figures and model decision memos must never be counted as the learner's work.
+  const syncStudentDecision = (current: Session16State) => {
+    if (!onUpdateDraft) return;
+    onUpdateDraft('work-prompt:0', current.enteredMinSeats.trim()
+      ? `My calculated minimum seats: ${current.enteredMinSeats}. I tested discount ${current.sliderDiscountPct}% at ${current.sliderVolume} seats.`
+      : '');
+    onUpdateDraft('work-prompt:1', current.decisionMemo);
+    onUpdateDraft('work-prompt:2', current.evidenceRequirements);
+    onUpdateDraft('workstation:s16-model', JSON.stringify({
+      discountPct: current.sliderDiscountPct,
+      volume: current.sliderVolume,
+      extraFixedCost: current.extraFixedCost,
+      enteredMinSeats: current.enteredMinSeats,
+      recommendation: current.decisionRecommendation,
+      memo: current.decisionMemo,
+      supportingEvidence: current.evidenceRequirements,
+    }));
+  };
+
   useEffect(() => {
     const loaded = loadSession16State();
     setState(loaded);
-    if (onUpdateDraft) {
-      onUpdateDraft(
-        'concept:explain',
-        `Unit Contribution = ₹${BASELINE_PRICE - VARIABLE_COST_PER_SEAT} baseline vs ₹${CANONICAL_METRICS.proposedUnitContribution} discounted. Break-even volume rises from 20 to 24 seats.`
-      );
-      onUpdateDraft(
-        'work-prompt:0',
-        `Baseline 25 seats: ₹${CANONICAL_METRICS.baseRevenue.toLocaleString('en-IN')} revenue, ₹${CANONICAL_METRICS.baseOperatingProfit.toLocaleString('en-IN')} profit. Proposed 30 seats @ 10% disc: ₹${CANONICAL_METRICS.proposedRevenue.toLocaleString('en-IN')} revenue, ₹${CANONICAL_METRICS.proposedOperatingProfit.toLocaleString('en-IN')} profit (Zero Incremental Gain).`
-      );
-      onUpdateDraft('work-prompt:1', loaded.decisionMemo);
-      onUpdateDraft('work-prompt:2', loaded.evidenceRequirements);
-      onUpdateDraft(
-        'team:contribution',
-        `Calculated break-even volumes (20 vs 24 seats), proved 30 seats required to match baseline profit, and formulated a tiered counter-proposal.`
-      );
-      onUpdateDraft('team:judgement', loaded.governance.decisionOwnerName);
-    }
+    syncStudentDecision(loaded);
   }, []);
 
-  // Update state helper with auto-persistence and draft sync
   const updateState = (updater: (prev: Session16State) => Session16State) => {
     setState((prev) => {
       const next = updater(prev);
       saveSession16State(next);
-      if (onUpdateDraft) {
-        onUpdateDraft(
-          'concept:explain',
-          `Unit Contribution = ₹${BASELINE_PRICE - VARIABLE_COST_PER_SEAT} baseline vs ₹${CANONICAL_METRICS.proposedUnitContribution} discounted. Break-even volume rises from 20 to 24 seats.`
-        );
-        onUpdateDraft(
-          'work-prompt:0',
-          `Baseline 25 seats: ₹${CANONICAL_METRICS.baseRevenue.toLocaleString('en-IN')} revenue, ₹${CANONICAL_METRICS.baseOperatingProfit.toLocaleString('en-IN')} profit. Proposed 30 seats @ 10% disc: ₹${CANONICAL_METRICS.proposedRevenue.toLocaleString('en-IN')} revenue, ₹${CANONICAL_METRICS.proposedOperatingProfit.toLocaleString('en-IN')} profit (Zero Incremental Gain).`
-        );
-        onUpdateDraft('work-prompt:1', next.decisionMemo);
-        onUpdateDraft('work-prompt:2', next.evidenceRequirements);
-        onUpdateDraft(
-          'team:contribution',
-          `Calculated break-even volumes (20 vs 24 seats), proved 30 seats required to match baseline profit, and formulated a tiered counter-proposal.`
-        );
-        onUpdateDraft('team:judgement', next.governance.decisionOwnerName);
-      }
+      syncStudentDecision(next);
       return next;
     });
   };
