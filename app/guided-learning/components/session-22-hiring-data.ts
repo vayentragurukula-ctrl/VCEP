@@ -53,68 +53,68 @@ export const INITIAL_INTERVIEW_EVIDENCE: InterviewEvidenceItem[] = [
   {
     id: 'IE-01',
     prompt: 'A task I completed',
-    title: 'Case F Receivables Ageing & 7-Day Liquidity Forecast Model',
+    title: '',
     situation:
-      'Client faced an impending Friday payroll default with a -₹20,000 cash deficit and ₹1,00,000 in unstratified receivables across four commercial debtors.',
+      '',
     personalTask:
-      'Independently built a dynamic 4-account ageing schedule and 7-day liquidity forecast linking opening bank cash and mandatory supplier outflows.',
+      '',
     actionTaken:
-      'Applied ISO date boundary formulas (=MAX(0, AsOfDate - DueDate)), isolated a ₹5,000 damaged goods dispute in suspense, and evaluated a supplier payment rescheduling order.',
+      '',
     resultVerified:
-      'Reconciled ₹95,000 receivables total with zero variance and contracted the net cash deficit to -₹12,000 (+₹8,000 improvement), proving bank cash remained strictly invariant at ₹25,000.',
-    evidenceRef: 'VCEP-ART-S20 / StudentID_S20_v01.xlsx',
+      '',
+    evidenceRef: '',
   },
   {
     id: 'IE-02',
     prompt: 'An error I corrected',
-    title: 'Non-Cash Credit Note Accounting Violation Correction',
+    title: '',
     situation:
-      'A preliminary model draft treated an approved ₹5,000 credit note issued to Beacon Retail as a bank cash collection, erroneously reporting opening bank cash as ₹30,000 and showing a false ₹7,000 deficit.',
+      '',
     personalTask:
-      'Audit the general ledger cash flow schedule and enforce statutory accounting principles regarding non-cash debt extinguishment.',
+      '',
     actionTaken:
-      'Corrected double-entry journals to debit Sales Returns/Allowances and credit Accounts Receivable without debiting Bank Cash; isolated cash ledger account 1010.',
+      '',
     resultVerified:
-      'Restored opening bank cash to its strictly invariant balance of ₹25,000; accurately reflected true remaining 7-day cash gap of -₹12,000, preventing a catastrophic operational overdraft.',
-    evidenceRef: 'VCEP-ART-S20 / Regression Test RT-06',
+      '',
+    evidenceRef: '',
   },
   {
     id: 'IE-03',
     prompt: 'A decision I escalated',
-    title: 'Ethical Refusal to Plug ₹5,000 Disputed Suspense Balance',
+    title: '',
     situation:
-      'A fictional corporate manager pressured the accounting team to remove an unverified ₹5,000 damaged goods dispute from suspense to force the trial balance to cross-foot before Friday close.',
+      '',
     personalTask:
-      'Uphold professional accounting ethics under ICAI standards, prevent financial misstatement, and protect the immutable audit trail.',
+      '',
     actionTaken:
-      'Respectfully refused to write off or plug the unverified item; documented the vendor claim in a formal Change Control Board register and escalated through approved compliance channels.',
+      '',
     resultVerified:
-      'Prevented fraudulent financial misstatement; secured formal credit note authorization (CR-01) backed by debit notes and management review signoff.',
-    evidenceRef: 'VCEP-ART-S20 / CCB Change Order CR-01',
+      '',
+    evidenceRef: '',
   },
 ];
 
 export const INITIAL_DEVELOPMENT_PLAN: DevelopmentMilestone[] = [
   {
     milestone: 'Milestone 1 (Day 1–10)',
-    capabilityGap: 'Advanced three-statement DCF financial modeling and automated PowerQuery ETL pipeline integration.',
+    capabilityGap: '',
     practiceAction:
-      'Construct a dynamic three-statement corporate forecasting model linking income statement, balance sheet, and debt sweep cash waterfall in Excel with sensitivity toggles.',
-    reviewDate: 'Day 10 (Post-Exit B Faculty Review)',
+      '',
+    reviewDate: '',
   },
   {
     milestone: 'Milestone 2 (Day 11–20)',
-    capabilityGap: 'Statutory GST input tax credit (ITC) reconciliation under GSTR-2B and statutory Rule 36(4) restrictions.',
+    capabilityGap: '',
     practiceAction:
-      'Re-run statutory tax invoice compliance audits matching 50 purchase register transactions against GSTR-2B data, identifying and quarantining non-compliant vendors.',
-    reviewDate: 'Day 20 (Mid-Month Review)',
+      '',
+    reviewDate: '',
   },
   {
     milestone: 'Milestone 3 (Day 21–30)',
-    capabilityGap: 'Verbal articulation of financial sensitivity trade-offs and capital allocation under interview time constraints.',
+    capabilityGap: '',
     practiceAction:
-      'Conduct timed mock viva presentations explaining breakeven shifts, capacity constraints, and unit economics to non-finance executive hiring panels.',
-    reviewDate: 'Day 30 (Final Certification Handover)',
+      '',
+    reviewDate: '',
   },
 ];
 
@@ -221,19 +221,19 @@ export const DEFAULT_SESSION_22_STATE: Session22State = {
   interviewEvidence: INITIAL_INTERVIEW_EVIDENCE,
   developmentPlan: INITIAL_DEVELOPMENT_PLAN,
   clarificationQuestions: INITIAL_CLARIFICATION_QUESTIONS,
-  strongestTaskReflection: DEFAULT_STRONGEST_TASK_REFLECTION,
-  ethicalResponse: DEFAULT_ETHICAL_RESPONSE,
-  interviewerFeedback: DEFAULT_INTERVIEWER_FEEDBACK,
-  studentContribution: DEFAULT_STUDENT_CONTRIBUTION,
-  reviewerCorrection: DEFAULT_REVIEWER_CORRECTION,
+  strongestTaskReflection: '',
+  ethicalResponse: '',
+  interviewerFeedback: '',
+  studentContribution: '',
+  reviewerCorrection: '',
   governance: {
     preparerName: 'Candidate (Financial Analyst Trainee)',
     reviewerName: 'Dr. Anita Roy (Faculty QA / Panel Lead)',
     decisionOwner: 'Prof. Rajesh Menon (Placement Director)',
-    auditStatus: 'Verified PASS (Certified Independent Competency)',
+    auditStatus: 'Pending Faculty Review',
     fileVersion: 'StudentID_S22_v01.docx',
-    interviewScore: 10,
+    interviewScore: 0,
   },
-  checklist: [true, true, true, true, true, true, true, true],
+  checklist: [false, false, false, false, false, false, false, false],
 };
 
