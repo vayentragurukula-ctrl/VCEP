@@ -291,6 +291,10 @@ export function Session05AccountingJourney({
     const issues: Record<string, string> = {};
 
     state.rows.forEach((row) => {
+      if (!row.debitAccount || !row.creditAccount) {
+        issues[row.id] = 'Choose a debit and a credit account for this voucher.';
+        return;
+      }
       if (row.docId === 'A05') {
         if (row.creditAccount.toLowerCase().includes('revenue')) {
           issues[row.id] = 'Double Counting Error: A05 is collection of AR, not new revenue!';
@@ -325,7 +329,7 @@ export function Session05AccountingJourney({
   };
 
   const handleResetToApprovedEntries = () => {
-    if (window.confirm('Reset journal rows back to canonical Case A approved entries?')) {
+    if (window.confirm('Clear your journal classifications and begin again? Saved official submissions are not affected.')) {
       updateState((prev) => ({
         ...prev,
         rows: INITIAL_JOURNAL_ROWS,
@@ -493,7 +497,7 @@ export function Session05AccountingJourney({
             title="Review Source Records"
             instruction="Inspect the approved Case A September commercial records (Vouchers A01 through A12) and note the opening bank deposit and starting equity."
             whyMatters="Professional accountants never record transactions from verbal summaries or informal chats. Every ledger entry must be substantiated by an authentic source document (tax invoice, payment voucher, bank credit memo) establishing date, counterparty, and monetary consideration."
-            statusText="12 Vouchers Verified"
+            statusText="12 Case A Source Vouchers"
             isActive={activeTaskId === 'S05-T01'}
             onSelectTask={() => setActiveTaskId('S05-T01')}
           >
@@ -765,7 +769,7 @@ export function Session05AccountingJourney({
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  Reset Approved Rows
+                  Clear My Journal
                 </button>
                 <button
                   type="button"
@@ -953,7 +957,7 @@ export function Session05AccountingJourney({
                                 ) : (
                                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
                                     <CheckCircle2 className="w-3 h-3" />
-                                    Verified
+                                    Entered
                                   </span>
                                 )}
                               </td>
