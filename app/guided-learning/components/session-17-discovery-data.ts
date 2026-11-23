@@ -364,18 +364,27 @@ export interface Session17State {
   governance: Session17Governance;
 }
 
+// Faculty reference examples above must not be a completed student attempt.
+// Keep interview questions as prompts, but require original answers and evidence.
+export const STUDENT_DISCOVERY_QUESTIONS: DiscoveryQuestion[] = INITIAL_DISCOVERY_QUESTIONS.map(q => ({
+  ...q, stakeholderAnswer: '', evidenceRequired: '',
+}));
+export const STUDENT_DISCOVERY_ASSUMPTIONS: InvalidatingAssumption[] = INITIAL_ASSUMPTIONS.map(a => ({
+  ...a, assumptionText: '', invalidationTrigger: '', evidenceMitigation: '',
+}));
+
 export const DEFAULT_SESSION_17_STATE: Session17State = {
-  questions: INITIAL_DISCOVERY_QUESTIONS,
-  problemStatement: DEFAULT_PROBLEM_STATEMENT,
-  permissions: INITIAL_DATA_PERMISSIONS,
-  assumptions: INITIAL_ASSUMPTIONS,
-  nextDiscoveryAction: DEFAULT_NEXT_DISCOVERY_ACTION,
+  questions: STUDENT_DISCOVERY_QUESTIONS,
+  problemStatement: '',
+  permissions: INITIAL_DATA_PERMISSIONS.map(p => ({ ...p, isCompliant: false })),
+  assumptions: STUDENT_DISCOVERY_ASSUMPTIONS,
+  nextDiscoveryAction: '',
   governance: {
-    preparerName: 'Lead Discovery Analyst',
-    reviewerName: 'Senior Project Manager',
-    decisionOwnerName: 'Vayentra Labs Founder / MD',
-    approvalStatus: 'Approved',
-    signoffDate: '2026-11-06',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwnerName: '',
+    approvalStatus: 'Draft',
+    signoffDate: '',
     fileVersion: 'StudentID_S17_v01.xlsx',
   },
 };
