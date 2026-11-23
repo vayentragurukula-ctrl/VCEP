@@ -1,5 +1,7 @@
 'use client';
 
+import { FocusedTaskInstruction } from './focused-task-instruction';
+
 import React, { useState, useEffect, useRef } from 'react';
 import {
   INITIAL_AGENDA,
@@ -193,9 +195,7 @@ function TaskCard({
       </div>
 
       {/* Task Instruction */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      <FocusedTaskInstruction instruction={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
