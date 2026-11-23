@@ -1,5 +1,7 @@
 'use client';
 
+import { FocusedTaskInstruction } from './focused-task-instruction';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   S09_STORAGE_KEY,
@@ -160,9 +162,7 @@ function TaskCard({
       </div>
 
       {/* Task Instruction (1-2 sentences) */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      <FocusedTaskInstruction instruction={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
