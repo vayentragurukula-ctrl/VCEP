@@ -244,6 +244,7 @@ export function Session07CleaningJourney({
       onUpdateDraft('concept:explain', loaded.formulaNotes);
       onUpdateDraft('team:contribution', loaded.governance.contributionSummary);
       onUpdateDraft('team:judgement', loaded.governance.professionalBoundary);
+      onUpdateDraft('workstation:s07-data', JSON.stringify({ decisions: loaded.decisions, cleanRows: loaded.cleanRows, exceptions: loaded.exceptions, notes: loaded.formulaNotes }));
     }
   }, []);
 
@@ -257,6 +258,7 @@ export function Session07CleaningJourney({
         onUpdateDraft('concept:explain', next.formulaNotes);
         onUpdateDraft('team:contribution', next.governance.contributionSummary);
         onUpdateDraft('team:judgement', next.governance.professionalBoundary);
+        onUpdateDraft('workstation:s07-data', JSON.stringify({ decisions: next.decisions, cleanRows: next.cleanRows, exceptions: next.exceptions, notes: next.formulaNotes }));
       }
 
       return next;
