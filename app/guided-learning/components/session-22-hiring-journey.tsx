@@ -1,5 +1,7 @@
 'use client';
 
+import { TaskInstruction } from './task-instruction';
+
 import React, { useState, useEffect } from 'react';
 import {
   SESSION_22_STORAGE_KEY,
@@ -180,9 +182,7 @@ function TaskCard({
       </div>
 
       {/* Task Instruction */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      <TaskInstruction text={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
@@ -550,9 +550,9 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
                     }}
                   >
                     <strong style={{ color: '#15803d', display: 'block', marginBottom: '4px' }}>
-                      Model Candidate Defense (STAR+V Framework):
+                      Your independent response (STAR+V):
                     </strong>
-                    {active.candidateDefense}
+                    Explain the situation, your responsibility, your action, the result and how you verified it. Your answers must be your own; the panel will evaluate them.
                   </div>
                 </div>
               );
@@ -848,19 +848,20 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>INTERVIEW RESULT:</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#15803d' }}>
-                  {state.governance.interviewScore} / 10 pts (Passed)
+                  Pending official faculty result
                 </div>
               </div>
             </div>
 
             <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '0 0 10px' }}>
-              Independent human assessment: evaluated on mathematical precision, conceptual justification, and professional ethics (not accent or fluency).
+              Official marks are published only in the faculty-reviewed submission below. This practice panel cannot certify or award grades.
             </p>
 
             <textarea
               rows={3}
               value={state.interviewerFeedback}
-              onChange={(e) => saveState({ ...state, interviewerFeedback: e.target.value })}
+              readOnly
+              aria-label="Faculty feedback is read-only; official grading is shown in the submission station"
               style={{
                 width: '100%',
                 padding: '10px 12px',

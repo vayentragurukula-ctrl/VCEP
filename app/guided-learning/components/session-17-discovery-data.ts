@@ -366,16 +366,16 @@ export interface Session17State {
 
 export const DEFAULT_SESSION_17_STATE: Session17State = {
   questions: INITIAL_DISCOVERY_QUESTIONS,
-  problemStatement: DEFAULT_PROBLEM_STATEMENT,
+  problemStatement: '',
   permissions: INITIAL_DATA_PERMISSIONS,
   assumptions: INITIAL_ASSUMPTIONS,
-  nextDiscoveryAction: DEFAULT_NEXT_DISCOVERY_ACTION,
+  nextDiscoveryAction: '',
   governance: {
-    preparerName: 'Lead Discovery Analyst',
-    reviewerName: 'Senior Project Manager',
-    decisionOwnerName: 'Vayentra Labs Founder / MD',
-    approvalStatus: 'Approved',
-    signoffDate: '2026-11-06',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwnerName: '',
+    approvalStatus: 'Draft',
+    signoffDate: '',
     fileVersion: 'StudentID_S17_v01.xlsx',
   },
 };

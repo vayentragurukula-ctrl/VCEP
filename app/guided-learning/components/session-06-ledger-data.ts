@@ -110,8 +110,8 @@ export const INITIAL_CORRECTION_JOURNAL: CorrectionJournalEntry = {
 };
 
 export const INITIAL_S06_STATE: Session06WorkstationState = {
-  correctionJournal: INITIAL_CORRECTION_JOURNAL,
-  undetectedErrors: '1. Error of Principle: Posting an item to the wrong class of account (e.g. crediting revenue instead of a receivable, or debiting an expense instead of capitalizing an asset). Both debits and credits equal, so the trial balance balances despite financial statement distortion.\n2. Error of Omission: Complete failure to record a transaction in both debit and credit sides. Debits still equal credits, leaving the trial balance balanced while transactions are missing.',
+  correctionJournal: { ...INITIAL_CORRECTION_JOURNAL, debitAccount: '', creditAccount: '', amount: 0, sourceDoc: '', explanation: '', isApplied: false },
+  undetectedErrors: '',
   checklist: INITIAL_CHECKLIST,
   governance: {
     studentId: 'STU-2026-ACC',

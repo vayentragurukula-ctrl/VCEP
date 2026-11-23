@@ -261,18 +261,18 @@ export const DEFAULT_SESSION_20_STATE: Session20State = {
   regressionTests: INITIAL_REGRESSION_TESTS,
   simulatedDuplicate: false,
   simulatedBlank: false,
-  versionDefense: DEFAULT_VERSION_DEFENSE,
-  executiveMemo: DEFAULT_EXECUTIVE_MEMO,
-  studentContribution: DEFAULT_STUDENT_CONTRIBUTION,
-  reviewerCorrection: DEFAULT_REVIEWER_CORRECTION,
+  versionDefense: '',
+  executiveMemo: '',
+  studentContribution: '',
+  reviewerCorrection: '',
   governance: {
-    preparerName: 'Priya Sharma (Financial Modeler)',
-    reviewerName: 'Meera Nair (Quality Assurance Lead)',
-    decisionOwner: 'Managing Director (Vayentra Labs)',
-    auditStatus: 'Verified PASS (Ready for Handover)',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwner: '',
+    auditStatus: 'Not reviewed',
     fileVersion: 'StudentID_S20_v01.xlsx',
   },
-  checklist: [true, true, true, true, true, true, true],
+  checklist: Array(7).fill(false),
 };
 
 export const S20_STORAGE_KEY = 'vcep:s20:drive-v3:change-control-state';

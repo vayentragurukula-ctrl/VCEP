@@ -296,25 +296,25 @@ export const S23_RUBRIC = [
 ];
 
 export const DEFAULT_SESSION_23_STATE: Session23State = {
-  agenda: INITIAL_AGENDA,
-  slides: INITIAL_SLIDES,
-  execSummary: INITIAL_EXEC_SUMMARY,
-  challenges: INITIAL_CHALLENGES,
-  demoScript: DEFAULT_DEMO_SCRIPT,
+  agenda: INITIAL_AGENDA.map(a => ({ ...a, assignedSpeaker: '' })),
+  slides: INITIAL_SLIDES.map(sl => ({ ...sl, keyPoints: [], evidenceReference: '', speakerNotes: '' })),
+  execSummary: { problemContext: '', sourceEvidence: '', workingDemoMethod: '', commercialDecision: '', scopeLimitations: '', nextStepsHandover: '' },
+  challenges: INITIAL_CHALLENGES.map(c => ({ ...c, squadDefenseStrategy: '', studentDefenseAnswer: '' })),
+  demoScript: '',
   demoRehearsal: {
     asOfDate: '2026-10-31',
-    creditNoteApplied: true,
-    supplierDeferralApplied: true,
+    creditNoteApplied: false,
+    supplierDeferralApplied: false,
   },
-  checkedPermissions: ['P1', 'P2', 'P3', 'P4', 'P5'],
-  studentContribution: DEFAULT_STUDENT_CONTRIBUTION,
-  reviewerCorrection: DEFAULT_REVIEWER_CORRECTION,
+  checkedPermissions: [],
+  studentContribution: '',
+  reviewerCorrection: '',
   governance: {
-    preparerName: 'Candidate Student (Squad Lead)',
-    reviewerName: 'Dr. Anita Roy (Faculty QA / Peer Reviewer)',
-    decisionOwner: 'Prof. Rajesh Menon (Managing Director / Board Chair)',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwner: '',
     fileVersion: 'StudentID_S23_v01.pptx',
   },
-  checklistIndices: [0, 1, 2, 3, 4, 5, 6, 7],
+  checklistIndices: [],
 };
 

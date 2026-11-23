@@ -1,5 +1,7 @@
 'use client';
 
+import { TaskInstruction } from './task-instruction';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   SESSION_21_STORAGE_KEY,
@@ -188,9 +190,7 @@ function TaskCard({
       </div>
 
       {/* Task Instruction (1-2 sentences) */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      <TaskInstruction text={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
@@ -1015,11 +1015,11 @@ export function Session21PortfolioJourney({ onUpdateDraft }: Props) {
                         fontWeight: 700,
                         padding: '2px 8px',
                         borderRadius: '4px',
-                        background: b.status === 'INFLATED' ? '#fee2e2' : '#dcfce7',
-                        color: b.status === 'INFLATED' ? '#b91c1c' : '#15803d',
+                        background: b.status === 'INFLATED' ? '#fee2e2' : b.status === 'DRAFT' ? '#f1f5f9' : '#dcfce7',
+                        color: b.status === 'INFLATED' ? '#b91c1c' : b.status === 'DRAFT' ? '#64748b' : '#15803d',
                       }}
                     >
-                      {b.status === 'INFLATED' ? '⚠️ INFLATED CLAIM' : '✓ VERIFIED AUTHENTIC'}
+                      {b.status === 'INFLATED' ? '⚠️ INFLATED CLAIM' : b.status === 'DRAFT' ? 'Draft — needs evidence' : '✓ VERIFIED AUTHENTIC'}
                     </span>
                   </div>
                 </div>
@@ -1232,7 +1232,7 @@ export function Session21PortfolioJourney({ onUpdateDraft }: Props) {
                       {art.verificationHash}
                     </td>
                     <td style={{ padding: '8px 10px' }}>
-                      <span style={{ background: '#f0fdf4', color: '#15803d', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>
+                      <span style={{ background: art.status === 'Practice Candidate' ? '#f1f5f9' : '#f0fdf4', color: art.status === 'Practice Candidate' ? '#475569' : '#15803d', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 700 }}>
                         {art.status}
                       </span>
                     </td>
