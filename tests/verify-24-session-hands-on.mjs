@@ -54,4 +54,7 @@ for (const [path,field] of [
 ]){
   assert.ok(fs.readFileSync(path,'utf8').includes(field),path+' must not precomplete student answers');
 }
+const s22=fs.readFileSync('app/guided-learning/components/session-22-hiring-journey.tsx','utf8');
+assert.doesNotMatch(s22,/Automatic Assessment Review: Exit B & Viva Verified|10 \/ 10 pts|All 3 STAR\+V Cases Complete/, 'Unverified Exit B must not be displayed as passed');
+assert.match(s22,/Students cannot certify their own Exit B result/, 'Faculty-only assessment authority required');
 console.log(`PASS: 24 connected sessions with ${taskCount} ordered task cards, inputs and concise briefs; key student-work defaults protected.`);
