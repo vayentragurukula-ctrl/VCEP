@@ -217,18 +217,18 @@ export const DEFAULT_SESSION_19_STATE: Session19State = {
   simulatedBlank: false,
   qaChecks: INITIAL_QA_CHECKS,
   acceptanceTests: INITIAL_ACCEPTANCE_TESTS,
-  studentContribution: DEFAULT_STUDENT_CONTRIBUTION,
-  reviewerCorrection: DEFAULT_REVIEWER_CORRECTION,
-  handoverSummary: DEFAULT_HANDOVER_SUMMARY,
+  studentContribution: '',
+  reviewerCorrection: '',
+  handoverSummary: '',
   governance: {
-    preparerName: 'Priya Sharma (Financial Modeler)',
-    reviewerName: 'Meera Nair (Risk & Audit Lead)',
-    decisionOwnerName: 'Rahul Deshmukh (Engagement Lead / MD Proxy)',
-    approvalStatus: 'Approved',
-    signoffDate: '2026-11-07',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwnerName: '',
+    approvalStatus: 'Draft',
+    signoffDate: '',
     fileVersion: 'StudentID_S19_v01.xlsx',
   },
-  checkedIndices: [0, 1, 2, 3, 4],
+  checkedIndices: [],
 };
 
 export const S19_RUBRIC = [
