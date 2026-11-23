@@ -284,7 +284,32 @@ export function Session07CleaningJourney({
     const beaconCount = state.cleanRows.filter((r) => r.customerStandard.toLowerCase() === 'beacon').length;
 
     const reconciledSum = cleanTotal + exceptionsTotal;
-    const isReconciled = reconciledSum === RAW_TOTAL_VOLUME_INR;
+    // Arithmetic can balance even when a learner selected the wrong source rows.
+    // Verify the approved source identities and the unresolved R05 amount too.
+    const expectedClean: Record<string, { amount: number; date: string; customer: string }> = {
+      R01: { amount: 12000, date: '2026-10-01', customer: 'asha' },
+      R02: { amount: 8000, date: '2026-10-02', customer: 'beacon' },
+      R03: { amount: 5000, date: '2026-10-03', customer: 'asha' },
+    };
+    const expectedHeld: Record<string, number | 'blank'> = {
+      'R02 (Row 3)': 8000, R04: 7000, R05: 'blank', R06: 4000,
+    };
+    const cleanIds = state.cleanRows.map((row) => row.sourceId);
+    const heldIds = state.exceptions.map((row) => row.sourceId);
+    const cleanSourcesCorrect = cleanIds.length === 3 && new Set(cleanIds).size === 3
+      && state.cleanRows.every((row) => {
+        const expected = expectedClean[row.sourceId];
+        return !!expected && row.amount === expected.amount
+          && row.isoDate === expected.date
+          && row.customerStandard.toLowerCase() === expected.customer;
+      });
+    const heldSourcesCorrect = heldIds.length === 4 && new Set(heldIds).size === 4
+      && state.exceptions.every((row) => {
+        if (!Object.prototype.hasOwnProperty.call(expectedHeld, row.sourceId)) return false;
+        return row.rawAmount === expectedHeld[row.sourceId];
+      });
+    const isReconciled = reconciledSum === RAW_TOTAL_VOLUME_INR
+      && cleanSourcesCorrect && heldSourcesCorrect;
     const variance = Math.abs(RAW_TOTAL_VOLUME_INR - reconciledSum);
 
     const isCleanTargetMatched = cleanTotal === TARGET_CLEAN_TOTAL_INR && state.cleanRows.length === 3;
