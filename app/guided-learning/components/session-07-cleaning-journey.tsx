@@ -313,14 +313,14 @@ export function Session07CleaningJourney({
   // Each raw receipt must be classified by the learner; never seed a completed answer.
   // A wrong approval is retained visibly and rejected by the independent review rules.
   const classifyReceipt = (row: RawReceiptItem, destination: 'clean' | 'exception') => {
+    if (destination === 'clean' && row.amount === 'blank') {
+      setCopiedNotification('Missing amount: hold this row until source evidence is available.');
+      return;
+    }
     updateState((prev) => {
       const cleanRows = prev.cleanRows.filter((item) => item.id !== `c${row.id}`);
       const exceptions = prev.exceptions.filter((item) => item.id !== `e${row.id}`);
       if (destination === 'clean') {
-        if (row.amount === 'blank') {
-          setCopiedNotification('Missing amount: quarantine this row until source evidence is available.');
-          return prev;
-        }
         const customer = row.customerRaw.trim().toLowerCase() === 'asha' ? 'Asha' : 'Beacon';
         cleanRows.push({
           id: `c${row.id}`, cleanId: `C${row.id.padStart(2, '0')}`, sourceId: row.sourceId,
@@ -543,8 +543,12 @@ export function Session07CleaningJourney({
                         <th className="py-3 px-4 w-32">Received Date</th>
                         <th className="py-3 px-4 w-36">Customer Raw</th>
                         <th className="py-3 px-4 w-32 text-right">Raw Amount (₹)</th>
-                        <th className="py-3 px-6 min-w-[240px]">Data Quality Audit Findings</th>
-                        <th className="py-3 px-3 w-28 text-center">Action Status</th>
+                        <th className="py-3 px-6 min-w-[180px]">
+                          <button type="button" onClick={() => setShowHints((v) => !v)} className="text-teal-700 underline underline-offset-2">
+                            {showHints ? 'Hide quality hints' : 'Show quality hints'}
+                          </button>
+                        </th>
+                        <th className="py-3 px-3 min-w-[170px] text-center">Your Decision</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 font-sans">
@@ -588,21 +592,22 @@ export function Session07CleaningJourney({
                                 ? 'bg-rose-100 text-rose-800'
                                 : 'bg-indigo-100 text-indigo-800'
                             }`}>
-                              {row.flag}
+                              {showHints ? row.flag : 'Inspect the source record'}
                             </span>
                           </td>
-                          <td className="py-3 px-3 text-center font-mono text-[11px]">
-                            {row.flagType === 'valid' || row.flagType === 'case_mismatch' ? (
-                              <span className="text-emerald-700 font-semibold flex items-center justify-center gap-1">
-                                <Check className="w-3.5 h-3.5" />
-                                Clean
-                              </span>
-                            ) : (
-                              <span className="text-amber-700 font-semibold flex items-center justify-center gap-1">
-                                <Ban className="w-3.5 h-3.5" />
-                                Quarantine
-                              </span>
-                            )}
+                          <td className="py-3 px-3 text-center text-xs">
+                            <div className="flex flex-wrap justify-center gap-1">
+                              <button type="button" onClick={() => classifyReceipt(row, 'clean')}
+                                aria-pressed={state.cleanRows.some((item) => item.id === `c${row.id}`)}
+                                className={`px-2 py-1 rounded border font-semibold ${state.cleanRows.some((item) => item.id === `c${row.id}`) ? 'bg-emerald-700 border-emerald-700 text-white' : 'bg-white border-slate-300 text-emerald-700'}`}>
+                                Approve
+                              </button>
+                              <button type="button" onClick={() => classifyReceipt(row, 'exception')}
+                                aria-pressed={state.exceptions.some((item) => item.id === `e${row.id}`)}
+                                className={`px-2 py-1 rounded border font-semibold ${state.exceptions.some((item) => item.id === `e${row.id}`) ? 'bg-amber-700 border-amber-700 text-white' : 'bg-white border-slate-300 text-amber-700'}`}>
+                                Hold
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -636,8 +641,10 @@ export function Session07CleaningJourney({
             onSelectTask={() => setActiveTaskId('S07-T02')}
           >
             <div className="space-y-6">
-              {/* 4 Cardinal Data Cleaning Rules */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Reference guidance remains available, but does not show before the learner makes a decision. */}
+              <details className="rounded-lg border border-slate-200 bg-white p-3">
+                <summary className="cursor-pointer font-semibold text-sm text-teal-700">Need help? Review the four data-cleaning rules</summary>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
                 <div className="bg-slate-50 p-4 rounded-xl border border-amber-200/80 shadow-sm space-y-2">
                   <div className="flex items-center gap-2 text-amber-700 font-bold text-xs">
                     <AlertOctagon className="w-4 h-4" />
@@ -682,6 +689,7 @@ export function Session07CleaningJourney({
                   </p>
                 </div>
               </div>
+              </details>
             </div>
           </TaskCard>
         </section>
