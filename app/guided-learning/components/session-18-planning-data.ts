@@ -391,22 +391,22 @@ export const DEFAULT_HANDOVER_NOTES =
   'The capstone solution is handed over to the Managing Director and Accounts Lead of Vayentra Labs as a protected Excel workbook (StudentID_S18_v01.xlsx) with live formulas. In accordance with project governance, NO direct production database writes or automated external debtor notifications are authorized. All operational updates must be reviewed by the internal finance lead.';
 
 export const DEFAULT_SESSION_18_STATE: Session18State = {
-  selectedSolution: 'option-a',
-  solutionRationale: DEFAULT_SOLUTION_RATIONALE,
+  selectedSolution: '',
+  solutionRationale: '',
   scopeItems: INITIAL_SCOPE_ITEMS,
   tasks: INITIAL_WBS_TASKS,
   acceptanceCriteria: INITIAL_ACCEPTANCE_CRITERIA,
   risks: INITIAL_RISK_REGISTER,
-  handoverNotes: DEFAULT_HANDOVER_NOTES,
+  handoverNotes: '',
   governance: {
-    preparerName: 'Priya Sharma (Financial Modeler)',
-    reviewerName: 'Meera Nair (Risk & Audit Lead)',
-    decisionOwnerName: 'Rahul Deshmukh (Engagement Lead / MD Proxy)',
-    approvalStatus: 'Approved',
-    signoffDate: '2026-11-06',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwnerName: '',
+    approvalStatus: 'Draft',
+    signoffDate: '',
     fileVersion: 'StudentID_S18_v01.xlsx',
   },
-  checkedIndices: [0, 1, 2, 3, 4],
+  checkedIndices: [],
 };
 
 export const S18_RUBRIC = [
