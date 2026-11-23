@@ -50,8 +50,15 @@ export interface ExceptionItem {
   officerNotes: string;
 }
 
+export type ReceiptDecision = {
+  route: 'approved' | 'quarantine';
+  category?: ExceptionItem['category'];
+};
+
 export interface Session07WorkstationState {
   rawReceipts: RawReceiptItem[];
+  // Decisions are the student's own classification, never seeded with answers.
+  decisions: Record<string, ReceiptDecision>;
   cleanRows: CleanReceiptItem[];
   exceptions: ExceptionItem[];
   formulaNotes: string;
@@ -134,9 +141,10 @@ export const INITIAL_EXCEPTIONS: ExceptionItem[] = [
 
 export const INITIAL_S07_STATE: Session07WorkstationState = {
   rawReceipts: CASE_B_RAW_RECEIPTS,
-  cleanRows: INITIAL_CLEAN_ROWS,
-  exceptions: INITIAL_EXCEPTIONS,
-  formulaNotes: '=SUMIFS(Clean[Amount], Clean[Customer], "Asha") = ₹17,000\n=SUMIFS(Clean[Amount], Clean[Customer], "Beacon") = ₹8,000\n=COUNTIF(Raw[ID], [@ID]) flags duplicate keys.\nKnown numeric Raw (₹44,000) = Approved (₹25,000) + Known-value exceptions (₹19,000). R05 remains unknown; it is NOT ₹0.',
+  decisions: {},
+  cleanRows: [],
+  exceptions: [],
+  formulaNotes: '',
   governance: {
     studentId: 'STU-2026-DAT',
     fileVersion: 'StudentID_S07_v01',
@@ -182,9 +190,10 @@ export function loadSession07State(): Session07WorkstationState {
     const parsed = JSON.parse(raw);
     return {
       rawReceipts: Array.isArray(parsed.rawReceipts) ? parsed.rawReceipts : CASE_B_RAW_RECEIPTS,
-      cleanRows: Array.isArray(parsed.cleanRows) ? parsed.cleanRows : INITIAL_CLEAN_ROWS,
-      exceptions: Array.isArray(parsed.exceptions) ? parsed.exceptions : INITIAL_EXCEPTIONS,
-      formulaNotes: parsed.formulaNotes || INITIAL_S07_STATE.formulaNotes,
+      decisions: parsed.decisions && typeof parsed.decisions === 'object' ? parsed.decisions : {},
+      cleanRows: Array.isArray(parsed.cleanRows) ? parsed.cleanRows : [],
+      exceptions: Array.isArray(parsed.exceptions) ? parsed.exceptions : [],
+      formulaNotes: typeof parsed.formulaNotes === 'string' ? parsed.formulaNotes : '',
       governance: {
         studentId: parsed.governance?.studentId || 'STU-2026-DAT',
         fileVersion: parsed.governance?.fileVersion || 'StudentID_S07_v01',
