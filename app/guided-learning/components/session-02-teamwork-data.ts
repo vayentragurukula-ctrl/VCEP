@@ -280,21 +280,19 @@ export const S02_TRAINER_GUIDELINES = {
 export function loadSession02State(): Session02WorkstationState {
   const defaultState: Session02WorkstationState = {
     version: '3.0',
-    introText:
-      'I am an entry-level commerce professional specializing in financial schedule preparation, bank statement reconciliation, and accounts receivable tracking. I ensure that financial deliverables maintain zero reconciliation variance and follow strict four-eye quality review standards.',
-    introSkill: 'Reconciliation & Accounts Receivable Analysis',
-    introRole: 'Finance Lead & Reconciler',
+    introText: '',
+    introSkill: '',
+    introRole: '',
     members: INITIAL_SQUAD_MEMBERS,
     slots: INITIAL_LAPTOP_SLOTS,
-    selectedOptionId: 'opt-backup',
-    justification:
-      'At 16:30, with Reviewer delayed in transit and delivery due at 18:00, we formally engage Backup (Student 3) per Clause 4 of our Squad Charter. Trainer notified via email; acting reviewer conducts independent cross-foot check from 16:45 to 17:30.',
+    selectedOptionId: '',
+    justification: '',
     charterCommitments: INITIAL_CHARTER_COMMITMENTS,
     rotations: INITIAL_ROTATIONS,
     peerFeedback: {
-      contributionSummary: 'I drafted the laptop rotation schedule and verified commute travel time buffers for team members.',
-      peerCorrection: 'Peer pointed out that the file naming needed the exact v01 suffix to comply with audit requirements.',
-      professionalBoundary: 'I will refuse to sign off on an unverified reconciliation balance even if the submission deadline is imminent.',
+      contributionSummary: '',
+      peerCorrection: '',
+      professionalBoundary: '',
     },
   };
 
