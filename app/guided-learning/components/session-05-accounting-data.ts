@@ -241,10 +241,19 @@ export interface Session05WorkstationState {
   lastSaved?: string;
 }
 
+// Student attempts begin blank. The approved entries remain available only as
+// faculty/source reference; never pre-fill a student's individual journal.
+export const STUDENT_JOURNAL_ROWS: JournalRowState[] = INITIAL_JOURNAL_ROWS.map((row) => ({
+  ...row,
+  debitAccount: '',
+  creditAccount: '',
+  status: 'Flagged',
+}));
+
 export const INITIAL_S05_STATE: Session05WorkstationState = {
-  rows: INITIAL_JOURNAL_ROWS,
+  rows: STUDENT_JOURNAL_ROWS,
   selectedVoucherId: 'A01',
-  exceptionsNotes: 'A09 is classified as Unearned Revenue (Liability) because service delivery has not occurred in September. A12 is capitalized as an Equipment Asset rather than expensed, per accrual accounting principles. A05 collection reduces Accounts Receivable and does not create new revenue.',
+  exceptionsNotes: '',
   governance: {
     studentId: 'STU-2026-ACC',
     fileVersion: 'StudentID_S05_v01',
@@ -289,7 +298,7 @@ export function loadSession05State(): Session05WorkstationState {
     if (!raw) return INITIAL_S05_STATE;
     const parsed = JSON.parse(raw);
     return {
-      rows: parsed.rows || INITIAL_JOURNAL_ROWS,
+      rows: Array.isArray(parsed.rows) ? parsed.rows : STUDENT_JOURNAL_ROWS,
       selectedVoucherId: parsed.selectedVoucherId || 'A01',
       exceptionsNotes: parsed.exceptionsNotes || INITIAL_S05_STATE.exceptionsNotes,
       governance: {
