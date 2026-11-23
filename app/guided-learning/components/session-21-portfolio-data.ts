@@ -19,7 +19,7 @@ export interface PortfolioArtifact {
   evidenceMetric: string;
   verificationHash: string;
   studentContribution: string;
-  status: 'Verified Authorized';
+  status: 'Verified Authorized' | 'Unverified';
   visibility: 'Public Portfolio' | 'Restricted / Faculty Only';
   ownership: string; // 'Current Student (Verified ID)'
 }
@@ -34,7 +34,7 @@ export interface ResumeBullet {
   fullText: string;
   evidenceRef: string; // e.g. 'VCEP-ART-S20'
   isSimulatedFlagged: boolean;
-  status: 'AUTHENTIC' | 'INFLATED';
+  status: 'AUTHENTIC' | 'INFLATED' | 'DRAFT';
   inflationReason?: string;
 }
 
@@ -252,22 +252,31 @@ export const S21_RUBRIC = [
   },
 ];
 
+// Example claims and artifact metadata do not establish a student's achievement.
+export const STUDENT_RESUME_BULLETS: ResumeBullet[] = INITIAL_RESUME_BULLETS.map(b => ({
+  ...b, xAccomplished: '', yMeasured: '', zMethod: '', fullText: '', evidenceRef: '', status: 'DRAFT',
+}));
+export const STUDENT_PORTFOLIO: PortfolioArtifact[] = AUTHORIZED_STUDENT_ARTIFACTS.map(a => ({
+  ...a, deliverableFile: '', evidenceMetric: '', verificationHash: '',
+  studentContribution: '', status: 'Unverified', ownership: '',
+}));
+
 export const DEFAULT_SESSION_21_STATE: Session21State = {
-  bullets: INITIAL_RESUME_BULLETS,
-  portfolio: AUTHORIZED_STUDENT_ARTIFACTS,
-  summaryText: DEFAULT_PROFESSIONAL_SUMMARY,
+  bullets: STUDENT_RESUME_BULLETS,
+  portfolio: STUDENT_PORTFOLIO,
+  summaryText: '',
   targetRole: 'Junior Financial Analyst / Commercial Operations Associate',
   selectedCategory: 'All',
-  recruiterChallenge: INITIAL_RECRUITER_CHALLENGE,
-  studentContribution: DEFAULT_STUDENT_CONTRIBUTION,
-  reviewerCorrection: DEFAULT_REVIEWER_CORRECTION,
+  recruiterChallenge: { ...INITIAL_RECRUITER_CHALLENGE, calculationProof: '', workLogEvidence: '', skillGapIdentified: '', nextPracticeTask: '', challengeCompleted: false },
+  studentContribution: '',
+  reviewerCorrection: '',
   governance: {
-    preparerName: 'Candidate (Financial Analyst Trainee)',
-    reviewerName: 'Peer Recruiter (QA Lead)',
-    decisionOwner: 'Hiring Manager (Placement Director)',
-    auditStatus: 'Verified PASS (Ready for Corporate Portfolio Handover)',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwner: '',
+    auditStatus: 'Not reviewed',
     fileVersion: 'StudentID_S21_v01.docx',
   },
-  checklist: [true, true, true, true, true, true, true, true],
+  checklist: [false, false, false, false, false, false, false, false],
 };
 
