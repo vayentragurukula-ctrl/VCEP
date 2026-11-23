@@ -217,23 +217,32 @@ export const S22_RUBRIC = [
   },
 ];
 
+// Protected Exit B must not begin with a completed interview, fabricated grade,
+// or implied faculty certification. Source examples are not student submissions.
+export const STUDENT_INTERVIEW_EVIDENCE: InterviewEvidenceItem[] = INITIAL_INTERVIEW_EVIDENCE.map(e => ({
+  ...e, title: '', situation: '', personalTask: '', actionTaken: '', resultVerified: '', evidenceRef: '',
+}));
+export const STUDENT_DEVELOPMENT_PLAN: DevelopmentMilestone[] = INITIAL_DEVELOPMENT_PLAN.map(m => ({
+  milestone: m.milestone, capabilityGap: '', practiceAction: '', reviewDate: '',
+}));
+
 export const DEFAULT_SESSION_22_STATE: Session22State = {
-  interviewEvidence: INITIAL_INTERVIEW_EVIDENCE,
-  developmentPlan: INITIAL_DEVELOPMENT_PLAN,
+  interviewEvidence: STUDENT_INTERVIEW_EVIDENCE,
+  developmentPlan: STUDENT_DEVELOPMENT_PLAN,
   clarificationQuestions: INITIAL_CLARIFICATION_QUESTIONS,
-  strongestTaskReflection: DEFAULT_STRONGEST_TASK_REFLECTION,
-  ethicalResponse: DEFAULT_ETHICAL_RESPONSE,
-  interviewerFeedback: DEFAULT_INTERVIEWER_FEEDBACK,
-  studentContribution: DEFAULT_STUDENT_CONTRIBUTION,
-  reviewerCorrection: DEFAULT_REVIEWER_CORRECTION,
+  strongestTaskReflection: '',
+  ethicalResponse: '',
+  interviewerFeedback: '',
+  studentContribution: '',
+  reviewerCorrection: '',
   governance: {
-    preparerName: 'Candidate (Financial Analyst Trainee)',
-    reviewerName: 'Dr. Anita Roy (Faculty QA / Panel Lead)',
-    decisionOwner: 'Prof. Rajesh Menon (Placement Director)',
-    auditStatus: 'Verified PASS (Certified Independent Competency)',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwner: '',
+    auditStatus: 'Not reviewed',
     fileVersion: 'StudentID_S22_v01.docx',
-    interviewScore: 10,
+    interviewScore: 0,
   },
-  checklist: [true, true, true, true, true, true, true, true],
+  checklist: [false, false, false, false, false, false, false, false],
 };
 
