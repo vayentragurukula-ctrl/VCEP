@@ -848,7 +848,7 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>INTERVIEW RESULT:</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#15803d' }}>
-                  {state.governance.interviewScore} / 10 pts (Passed)
+                  {state.governance.interviewScore > 0 && state.interviewerFeedback.trim() ? `${state.governance.interviewScore} / 10 pts · Faculty feedback recorded` : 'Awaiting faculty evaluation'}
                 </div>
               </div>
             </div>
