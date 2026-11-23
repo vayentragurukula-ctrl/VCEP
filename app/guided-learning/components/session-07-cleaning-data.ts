@@ -134,9 +134,9 @@ export const INITIAL_EXCEPTIONS: ExceptionItem[] = [
 
 export const INITIAL_S07_STATE: Session07WorkstationState = {
   rawReceipts: CASE_B_RAW_RECEIPTS,
-  cleanRows: INITIAL_CLEAN_ROWS,
-  exceptions: INITIAL_EXCEPTIONS,
-  formulaNotes: '=SUMIFS(Clean[Amount], Clean[Customer], "Asha") = ₹17,000\n=SUMIFS(Clean[Amount], Clean[Customer], "Beacon") = ₹8,000\n=COUNTIF(Raw[ID], [@ID]) flags duplicate keys.\nKnown numeric Raw (₹44,000) = Approved (₹25,000) + Known-value exceptions (₹19,000). R05 remains unknown; it is NOT ₹0.',
+  cleanRows: [],
+  exceptions: [],
+  formulaNotes: '',
   governance: {
     studentId: 'STU-2026-DAT',
     fileVersion: 'StudentID_S07_v01',
