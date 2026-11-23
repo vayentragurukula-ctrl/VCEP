@@ -25,7 +25,6 @@ export interface VivaScenarioDefense {
   category: string;
   examinerQuestion: string;
   keyTechnicalConcept: string;
-  candidateDefense: string;
 }
 
 export interface Session22State {
@@ -124,40 +123,30 @@ export const CORE_VIVA_SCENARIOS: VivaScenarioDefense[] = [
     category: 'Accounting Principles & Ind AS',
     examinerQuestion: 'Why did you classify advance customer payments as liabilities rather than revenue?',
     keyTechnicalConcept: 'Ind AS 115 Revenue Recognition & Performance Obligations',
-    candidateDefense:
-      'Under Ind AS 115, cash received prior to delivery represents an unfulfilled performance obligation. Revenue can only be recognized upon satisfaction of delivery and customer acceptance. Until then, advance payments must remain classified as a current liability to prevent misleading revenue inflation.',
   },
   {
     id: 'V2',
     category: 'Bank Reconciliation & Timing Bridges',
     examinerQuestion: 'How did you reconcile the ₹4,000 variance between the bank statement and company cash book?',
     keyTechnicalConcept: 'Timing Bridge (Uncredited vs Unpresented Cheques)',
-    candidateDefense:
-      'The ₹4,000 variance is entirely due to timing differences: ₹6,000 in cheques deposited but not yet cleared by the bank, and ₹10,000 in issued cheques not yet presented for payment. Applying the timing bridge: ₹87,200 bank balance + ₹6,000 uncredited - ₹10,000 unpresented reconciles exactly to the ₹83,200 adjusted cash book balance with ₹0 unexplained variance.',
   },
   {
     id: 'V3',
     category: 'Sales Operations & Funnel Analytics',
     examinerQuestion: 'Why is it deceptive to report only the Closed-Lead Win Rate in sales operations?',
     keyTechnicalConcept: 'Denominator Transparency (All-Lead vs Closed-Lead)',
-    candidateDefense:
-      'Closed-Lead Win Rate (3 won ÷ 5 closed = 60.0%) measures closing efficiency on decided deals, but it excludes 3 open inquiries. Reporting 60% alone conceals stalled leads in the pipeline. The All-Lead Win Rate (3 won ÷ 8 total = 37.5%) provides full visibility into marketing acquisition reach and stalled deal volume.',
   },
   {
     id: 'V4',
     category: 'Commercial Unit Economics',
     examinerQuestion: 'Why does accepting 30 seats at a 10% discount produce zero incremental profit?',
     keyTechnicalConcept: 'Break-Even Shifts & Capacity Exhaustion',
-    candidateDefense:
-      'At standard price ₹10,000 and ₹4,000 variable cost, unit contribution is ₹6,000. At 25 seats, total contribution is ₹1,50,000, yielding ₹30,000 profit over ₹1,20,000 fixed costs. Discounting to ₹9,000 reduces unit contribution to ₹5,000. At 30 seats, total contribution remains ₹1,50,000, generating identical ₹30,000 profit (₹0 incremental gain) while exhausting 100% operational capacity with zero buffer.',
   },
   {
     id: 'V5',
     category: 'Professional Ethics & Governance',
     examinerQuestion: 'What would you do if an executive asked you to remove an unverified ₹5,000 suspense item to balance the books?',
     keyTechnicalConcept: 'Audit Integrity & Fraud Prevention (ICAI Code of Ethics)',
-    candidateDefense:
-      'I would respectfully refuse and retain the ₹5,000 in an isolated suspense account. Falsifying or concealing unverified items violates professional accounting ethics and internal control standards. I would document the dispute details and escalate through approved management channels until verified source vouchers are obtained.',
   },
 ];
 
