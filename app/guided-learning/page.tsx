@@ -59,6 +59,7 @@ import { Session22HiringJourney } from './components/session-22-hiring-journey';
 import { Session23PresentationJourney } from './components/session-23-presentation-journey';
 import { Session24PassportJourney } from './components/session-24-passport-journey';
 import { OfficialSubmissionStation } from './components/official-submission-station';
+import { getWorkbookOutcome } from './components/session-workbook-outcomes';
 import { useAutomaticReview } from '@/lib/review-engine/engine';
 import { StageStatus, StageName, ReviewCheckItem } from '@/lib/review-engine/types';
 import { CheckCircle2, AlertCircle, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
@@ -1169,6 +1170,22 @@ export default function GuidedLearningPage(){
    {!loading && !authError && lesson && (
      selected >= 1 && selected <= 24 ? (
        <div className="v3-content" key={'session-' + selected + '-journey'}>
+         {getWorkbookOutcome(selected) && (
+           <section
+             aria-label="Your session's practical assignment"
+             data-testid="vcep-workbook-deliverable"
+             style={{ border: '1px solid #DCE5E9', borderLeft: '3px solid #0F766E', background: '#ffffff', borderRadius: '12px', padding: '14px 18px', marginBottom: '16px' }}
+           >
+             <div style={{ fontSize: '11px', color: '#0F766E', letterSpacing: '0.08em', fontWeight: 800 }}>TODAY'S PRACTICAL WORK</div>
+             <p style={{ fontSize: '13px', color: '#334155', margin: '5px 0' }}>{getWorkbookOutcome(selected)?.mission}</p>
+             <p style={{ fontSize: '13px', fontWeight: 700, color: '#17245C' }}>Deliverable: {getWorkbookOutcome(selected)?.deliverable}</p>
+             {getWorkbookOutcome(selected)?.assessmentNote && (
+               <p style={{ marginTop: '8px', fontSize: '12px', fontWeight: 600, color: '#92400E' }}>
+                 {getWorkbookOutcome(selected)?.assessmentNote}
+               </p>
+             )}
+           </section>
+         )}
          {selected === 1 && <Session01StartupJourney onUpdateDraft={update} />}
          {selected === 2 && <Session02TeamworkJourney onUpdateDraft={update} />}
          {selected === 3 && <Session03CommunicationJourney onUpdateDraft={update} />}
