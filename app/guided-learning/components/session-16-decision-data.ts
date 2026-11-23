@@ -216,7 +216,7 @@ export interface Session16State {
   sliderVolume: number;
   extraFixedCost: number;
   enteredMinSeats: string;
-  decisionRecommendation: 'REJECT' | 'CONDITIONAL' | 'COUNTER';
+  decisionRecommendation: 'UNDECIDED' | 'REJECT' | 'CONDITIONAL' | 'COUNTER';
   decisionMemo: string;
   evidenceRequirements: string;
   governance: Session16Governance;
@@ -227,16 +227,16 @@ export const DEFAULT_SESSION_16_STATE: Session16State = {
   sliderDiscountPct: 10,
   sliderVolume: 30,
   extraFixedCost: 0,
-  enteredMinSeats: '30',
-  decisionRecommendation: 'COUNTER',
-  decisionMemo: DEFAULT_DECISION_MEMO,
-  evidenceRequirements: DEFAULT_EVIDENCE_REQUIREMENTS,
+  enteredMinSeats: '',
+  decisionRecommendation: 'UNDECIDED',
+  decisionMemo: '',
+  evidenceRequirements: '',
   governance: {
     preparerName: 'Commercial Analyst Lead',
     reviewerName: 'Finance Operations Manager',
     decisionOwnerName: 'Commercial Director',
     approvalStatus: 'Conditional',
-    signoffDate: '2026-11-06',
+    signoffDate: '',
     fileVersion: 'StudentID_S16_v01.xlsx',
   },
 };

@@ -1,5 +1,7 @@
 'use client';
 
+import { ConciseTaskInstruction } from './concise-task-instruction';
+
 import React, { useState, useEffect } from 'react';
 import {
   SESSION_22_STORAGE_KEY,
@@ -179,10 +181,8 @@ function TaskCard({
         </div>
       </div>
 
-      {/* Task Instruction */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      {/* One-line action first; full approved instruction available on demand. */}
+      <ConciseTaskInstruction instruction={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
@@ -602,7 +602,7 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
                 </p>
               </div>
               <span style={{ fontSize: '0.75rem', color: '#15803d', fontWeight: 700 }}>
-                All 3 STAR+V Cases Complete ✓
+                {state.interviewEvidence.filter((item) => [item.title, item.situation, item.personalTask, item.actionTaken, item.resultVerified, item.evidenceRef].every((value) => value.trim())).length} / 3 Cases Prepared
               </span>
             </div>
 
@@ -848,7 +848,7 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>INTERVIEW RESULT:</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#15803d' }}>
-                  {state.governance.interviewScore} / 10 pts (Passed)
+                  {state.governance.interviewScore > 0 && state.interviewerFeedback.trim() ? `${state.governance.interviewScore} / 10 pts · Faculty feedback recorded` : 'Awaiting faculty evaluation'}
                 </div>
               </div>
             </div>
@@ -975,23 +975,9 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
                 <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBottom: '4px' }}>
                   Assessment Status:
                 </label>
-                <select
-                  value={state.governance.auditStatus}
-                  onChange={(e) =>
-                    saveState({
-                      ...state,
-                      governance: { ...state.governance, auditStatus: e.target.value },
-                    })
-                  }
-                  style={{ width: '100%', padding: '8px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.82rem', background: '#ffffff' }}
-                >
-                  <option value="Verified PASS (Certified Independent Competency)">
-                    Verified PASS (Certified Independent Competency)
-                  </option>
-                  <option value="Conditional Approval">Conditional Approval</option>
-                  <option value="Under Review">Under Review</option>
-                  <option value="Draft Attempt">Draft Attempt</option>
-                </select>
+                <p style={{ fontSize: '0.82rem', fontWeight: 600, color: '#475569', margin: 0 }}>
+                  Pending official faculty review. Students cannot certify their own Exit B result.
+                </p>       </select>
               </div>
             </div>
 
@@ -1031,7 +1017,7 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
                   cursor: 'pointer',
                 }}
               >
-                Reset Defaults
+                Clear My Interview Draft
               </button>
             </div>
           </div>
@@ -1043,16 +1029,16 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
                 <ShieldCheck size={22} color="#15803d" />
                 <div>
                   <strong style={{ fontSize: '1rem', color: '#15803d', display: 'block' }}>
-                    Automatic Assessment Review: Exit B & Viva Verified
+                    Interview Preparation Checklist · Faculty Assessment Pending
                   </strong>
                   <span style={{ fontSize: '0.75rem', color: '#166534' }}>
-                    Controlled assessment protocol, 3 STAR+V interview cases, ethical defense, and 30-day plan verified!
+                    The panel evaluates the independent Exit B attempt and interview separately. This practice checklist does not award marks.
                   </span>
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#166534' }}>Estimated Rubric Score:</span>
-                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#15803d' }}>10 / 10 pts</div>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#166534' }}>Official Faculty Score:</span>
+                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#15803d' }}>Pending</div>
               </div>
             </div>
 

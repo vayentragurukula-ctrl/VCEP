@@ -141,18 +141,18 @@ export const INITIAL_S10_STATE: Session10WorkstationState = {
   managementQuestion:
     'Is our 25% September revenue growth converting into sustainable operating margin and cash, or are mounting delivery costs and uncollected trade receivables threatening liquidity?',
   directCostInput: 75000,
-  selectedKpiIds: ['kpi-revenue', 'kpi-gross-margin', 'kpi-operating-margin', 'kpi-receivables'],
-  memoText: DEFAULT_MEMO_TEXT,
-  visualizationJustification: DEFAULT_JUSTIFICATION,
+  selectedKpiIds: [],
+  memoText: '',
+  visualizationJustification: '',
   governance: {
     studentId: 'STU-2026-1044',
     fileVersion: 'StudentID_S10_v01.xlsx',
-    action1Owner: 'Operations Lead (Priya Nair)',
-    action1Deadline: 'Friday 17:00',
-    action2Owner: 'Collections Lead (Rohan Sharma)',
-    action2Deadline: 'Monday 12:00',
+    action1Owner: '',
+    action1Deadline: '',
+    action2Owner: '',
+    action2Deadline: '',
   },
-  checkedIndices: [0, 1, 2, 3, 4, 5],
+  checkedIndices: [],
 };
 
 export const S10_RUBRIC = [

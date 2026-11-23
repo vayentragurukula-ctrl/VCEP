@@ -1,5 +1,7 @@
 'use client';
 
+import { ConciseTaskInstruction } from './concise-task-instruction';
+
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   S07_STORAGE_KEY,
@@ -9,8 +11,6 @@ import {
   TARGET_ASHA_TOTAL_INR,
   TARGET_BEACON_TOTAL_INR,
   CASE_B_RAW_RECEIPTS,
-  INITIAL_CLEAN_ROWS,
-  INITIAL_EXCEPTIONS,
   INITIAL_S07_STATE,
   S07_RUBRIC,
   countWords,
@@ -170,10 +170,8 @@ function TaskCard({
         )}
       </div>
 
-      {/* Task Instruction (1-2 sentences) */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      {/* One-line action first; full approved instruction available on demand. */}
+      <ConciseTaskInstruction instruction={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (
@@ -236,6 +234,7 @@ export function Session07CleaningJourney({
   const [activeTableView, setActiveTableView] = useState<'split' | 'clean' | 'exceptions'>('split');
   const [copiedNotification, setCopiedNotification] = useState<string | null>(null);
   const [activeTaskId, setActiveTaskId] = useState<string>('S07-T01');
+  const [showHints, setShowHints] = useState(false);
 
   // Hydrate on mount
   useEffect(() => {
@@ -256,6 +255,7 @@ export function Session07CleaningJourney({
 
       if (onUpdateDraft) {
         onUpdateDraft('concept:explain', next.formulaNotes);
+        onUpdateDraft('work:analysis', JSON.stringify({ approved: next.cleanRows, exceptions: next.exceptions }));
         onUpdateDraft('team:contribution', next.governance.contributionSummary);
         onUpdateDraft('team:judgement', next.governance.professionalBoundary);
       }
@@ -284,7 +284,32 @@ export function Session07CleaningJourney({
     const beaconCount = state.cleanRows.filter((r) => r.customerStandard.toLowerCase() === 'beacon').length;
 
     const reconciledSum = cleanTotal + exceptionsTotal;
-    const isReconciled = reconciledSum === RAW_TOTAL_VOLUME_INR;
+    // Arithmetic can balance even when a learner selected the wrong source rows.
+    // Verify the approved source identities and the unresolved R05 amount too.
+    const expectedClean: Record<string, { amount: number; date: string; customer: string }> = {
+      R01: { amount: 12000, date: '2026-10-01', customer: 'asha' },
+      R02: { amount: 8000, date: '2026-10-02', customer: 'beacon' },
+      R03: { amount: 5000, date: '2026-10-03', customer: 'asha' },
+    };
+    const expectedHeld: Record<string, number | 'blank'> = {
+      'R02 (Row 3)': 8000, R04: 7000, R05: 'blank', R06: 4000,
+    };
+    const cleanIds = state.cleanRows.map((row) => row.sourceId);
+    const heldIds = state.exceptions.map((row) => row.sourceId);
+    const cleanSourcesCorrect = cleanIds.length === 3 && new Set(cleanIds).size === 3
+      && state.cleanRows.every((row) => {
+        const expected = expectedClean[row.sourceId];
+        return !!expected && row.amount === expected.amount
+          && row.isoDate === expected.date
+          && row.customerStandard.toLowerCase() === expected.customer;
+      });
+    const heldSourcesCorrect = heldIds.length === 4 && new Set(heldIds).size === 4
+      && state.exceptions.every((row) => {
+        if (!Object.prototype.hasOwnProperty.call(expectedHeld, row.sourceId)) return false;
+        return row.rawAmount === expectedHeld[row.sourceId];
+      });
+    const isReconciled = reconciledSum === RAW_TOTAL_VOLUME_INR
+      && cleanSourcesCorrect && heldSourcesCorrect;
     const variance = Math.abs(RAW_TOTAL_VOLUME_INR - reconciledSum);
 
     const isCleanTargetMatched = cleanTotal === TARGET_CLEAN_TOTAL_INR && state.cleanRows.length === 3;
@@ -310,14 +335,44 @@ export function Session07CleaningJourney({
   }, [state.cleanRows, state.exceptions]);
 
   // Handlers
+  // Each raw receipt must be classified by the learner; never seed a completed answer.
+  // A wrong approval is retained visibly and rejected by the independent review rules.
+  const classifyReceipt = (row: RawReceiptItem, destination: 'clean' | 'exception') => {
+    if (destination === 'clean' && row.amount === 'blank') {
+      setCopiedNotification('Missing amount: hold this row until source evidence is available.');
+      return;
+    }
+    updateState((prev) => {
+      const cleanRows = prev.cleanRows.filter((item) => item.id !== `c${row.id}`);
+      const exceptions = prev.exceptions.filter((item) => item.id !== `e${row.id}`);
+      if (destination === 'clean') {
+        const customer = row.customerRaw.trim().toLowerCase() === 'asha' ? 'Asha' : 'Beacon';
+        cleanRows.push({
+          id: `c${row.id}`, cleanId: `C${row.id.padStart(2, '0')}`, sourceId: row.sourceId,
+          isoDate: row.receivedDate, customerStandard: customer, amount: Number(row.amount),
+          rowStatus: 'Approved',
+        });
+      } else {
+        const category: ExceptionItem['category'] = row.flagType === 'duplicate'
+          ? 'Duplicate Entry' : row.flagType === 'invalid_date'
+          ? 'Invalid Date' : row.flagType === 'ambiguous_date'
+          ? 'Ambiguous Date Format' : 'Missing Value';
+        exceptions.push({
+          id: `e${row.id}`,
+          sourceId: row.sourceId === 'R02' ? `R02 (Row ${Number(row.id)})` : row.sourceId,
+          rawCustomer: row.customerRaw, rawAmount: row.amount === 'blank' ? 'blank' : Number(row.amount),
+          rawDate: row.receivedDate, category, riskDescription: '',
+          auditAction: 'Held pending verification of source record.',
+          status: 'Quarantined (Suspense)', officerNotes: '',
+        });
+      }
+      return { ...prev, cleanRows, exceptions };
+    });
+  };
+
   const handleResetToApproved = () => {
-    if (window.confirm('Reset dataset to canonical Case B approved Clean and Exceptions tables?')) {
-      updateState((prev) => ({
-        ...prev,
-        cleanRows: INITIAL_CLEAN_ROWS,
-        exceptions: INITIAL_EXCEPTIONS,
-        formulaNotes: INITIAL_S07_STATE.formulaNotes,
-      }));
+    if (window.confirm('Clear your classifications and formula notes to start again?')) {
+      updateState((prev) => ({ ...prev, cleanRows: [], exceptions: [], formulaNotes: '' }));
     }
   };
 
@@ -513,8 +568,12 @@ export function Session07CleaningJourney({
                         <th className="py-3 px-4 w-32">Received Date</th>
                         <th className="py-3 px-4 w-36">Customer Raw</th>
                         <th className="py-3 px-4 w-32 text-right">Raw Amount (₹)</th>
-                        <th className="py-3 px-6 min-w-[240px]">Data Quality Audit Findings</th>
-                        <th className="py-3 px-3 w-28 text-center">Action Status</th>
+                        <th className="py-3 px-6 min-w-[180px]">
+                          <button type="button" onClick={() => setShowHints((v) => !v)} className="text-teal-700 underline underline-offset-2">
+                            {showHints ? 'Hide quality hints' : 'Show quality hints'}
+                          </button>
+                        </th>
+                        <th className="py-3 px-3 min-w-[170px] text-center">Your Decision</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 font-sans">
@@ -558,21 +617,22 @@ export function Session07CleaningJourney({
                                 ? 'bg-rose-100 text-rose-800'
                                 : 'bg-indigo-100 text-indigo-800'
                             }`}>
-                              {row.flag}
+                              {showHints ? row.flag : 'Inspect the source record'}
                             </span>
                           </td>
-                          <td className="py-3 px-3 text-center font-mono text-[11px]">
-                            {row.flagType === 'valid' || row.flagType === 'case_mismatch' ? (
-                              <span className="text-emerald-700 font-semibold flex items-center justify-center gap-1">
-                                <Check className="w-3.5 h-3.5" />
-                                Clean
-                              </span>
-                            ) : (
-                              <span className="text-amber-700 font-semibold flex items-center justify-center gap-1">
-                                <Ban className="w-3.5 h-3.5" />
-                                Quarantine
-                              </span>
-                            )}
+                          <td className="py-3 px-3 text-center text-xs">
+                            <div className="flex flex-wrap justify-center gap-1">
+                              <button type="button" onClick={() => classifyReceipt(row, 'clean')}
+                                aria-pressed={state.cleanRows.some((item) => item.id === `c${row.id}`)}
+                                className={`px-2 py-1 rounded border font-semibold ${state.cleanRows.some((item) => item.id === `c${row.id}`) ? 'bg-emerald-700 border-emerald-700 text-white' : 'bg-white border-slate-300 text-emerald-700'}`}>
+                                Approve
+                              </button>
+                              <button type="button" onClick={() => classifyReceipt(row, 'exception')}
+                                aria-pressed={state.exceptions.some((item) => item.id === `e${row.id}`)}
+                                className={`px-2 py-1 rounded border font-semibold ${state.exceptions.some((item) => item.id === `e${row.id}`) ? 'bg-amber-700 border-amber-700 text-white' : 'bg-white border-slate-300 text-amber-700'}`}>
+                                Hold
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -601,13 +661,15 @@ export function Session07CleaningJourney({
             title="Find Data Issues"
             instruction="Identify specific data defects across the receipt import: duplicate export keys, invalid calendar dates, ambiguous date formats, missing amounts, and customer casing mismatches."
             whyMatters="Dirty data cascades into financial reporting errors. For example, treating a duplicate receipt as fresh cash overstates revenue, while guessing a blank invoice amount conceals unpaid receivables."
-            statusText="4 Issue Types Flagged"
+            statusText={`${state.cleanRows.length + state.exceptions.length} / 7 Rows Classified`}
             isActive={activeTaskId === 'S07-T02'}
             onSelectTask={() => setActiveTaskId('S07-T02')}
           >
             <div className="space-y-6">
-              {/* 4 Cardinal Data Cleaning Rules */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Reference guidance remains available, but does not show before the learner makes a decision. */}
+              <details className="rounded-lg border border-slate-200 bg-white p-3">
+                <summary className="cursor-pointer font-semibold text-sm text-teal-700">Need help? Review the four data-cleaning rules</summary>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-3">
                 <div className="bg-slate-50 p-4 rounded-xl border border-amber-200/80 shadow-sm space-y-2">
                   <div className="flex items-center gap-2 text-amber-700 font-bold text-xs">
                     <AlertOctagon className="w-4 h-4" />
@@ -652,6 +714,7 @@ export function Session07CleaningJourney({
                   </p>
                 </div>
               </div>
+              </details>
             </div>
           </TaskCard>
         </section>
@@ -676,7 +739,7 @@ export function Session07CleaningJourney({
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  Reset Approved State
+                  Clear My Work
                 </button>
                 <button
                   type="button"
@@ -697,7 +760,7 @@ export function Session07CleaningJourney({
             title="Clean and Quarantine"
             instruction="Segregate verified records into the Clean Approved dataset while routing suspect, duplicate, or unverified records to the Quarantine Suspense Register."
             whyMatters="Quarantining preserves business continuity: verified customer receipts can immediately flow to the general ledger and receivables matching, while unresolved exceptions are placed in a monitored suspense queue for investigator follow-up."
-            statusText="3 Clean · 4 Quarantined"
+            statusText={`${state.cleanRows.length} Clean · ${state.exceptions.length} Held`}
             isActive={activeTaskId === 'S07-T03'}
             onSelectTask={() => setActiveTaskId('S07-T03')}
           >
@@ -720,7 +783,7 @@ export function Session07CleaningJourney({
                     activeTableView === 'clean' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border'
                   }`}
                 >
-                  Clean Approved Only (3 Rows / ₹25,000)
+                  Clean Approved
                 </button>
                 <button
                   type="button"
@@ -729,7 +792,7 @@ export function Session07CleaningJourney({
                     activeTableView === 'exceptions' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border'
                   }`}
                 >
-                  Exceptions Register Only (4 Rows / ₹19,000)
+                  Quarantine Register
                 </button>
               </div>
 
@@ -745,7 +808,7 @@ export function Session07CleaningJourney({
                           <h4 className="font-semibold text-sm">Clean Approved Working Table</h4>
                         </div>
                         <span className="text-xs font-mono bg-emerald-800/60 px-2 py-0.5 rounded text-emerald-200">
-                          3 Rows • ₹{metrics.cleanTotal.toLocaleString('en-IN')}
+                          {state.cleanRows.length} Rows • ₹{metrics.cleanTotal.toLocaleString('en-IN')}
                         </span>
                       </div>
 
@@ -801,7 +864,7 @@ export function Session07CleaningJourney({
                           <h4 className="font-semibold text-sm">Quarantine Exceptions Register</h4>
                         </div>
                         <span className="text-xs font-mono bg-amber-800/60 px-2 py-0.5 rounded text-amber-200">
-                          4 Rows • ₹{metrics.exceptionsTotal.toLocaleString('en-IN')}
+                          {state.exceptions.length} Rows • ₹{metrics.exceptionsTotal.toLocaleString('en-IN')}
                         </span>
                       </div>
 

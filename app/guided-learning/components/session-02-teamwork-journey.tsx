@@ -1,5 +1,7 @@
 'use client';
 
+import { ConciseTaskInstruction } from './concise-task-instruction';
+
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   S02_STORAGE_KEY,
@@ -161,10 +163,8 @@ function TaskCard({
         )}
       </div>
 
-      {/* Task Instruction (1-2 sentences) */}
-      <p style={{ fontSize: '13.5px', color: '#64748B', margin: '0 0 14px', lineHeight: 1.55 }}>
-        {instruction}
-      </p>
+      {/* One-line action first; full approved instruction available on demand. */}
+      <ConciseTaskInstruction instruction={instruction} />
 
       {/* Accessible Collapsible Why This Matters */}
       {whyMatters && (

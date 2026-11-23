@@ -213,18 +213,18 @@ export interface JournalRowState {
 }
 
 export const INITIAL_JOURNAL_ROWS: JournalRowState[] = [
-  { id: '1', docId: 'A01', date: 'Sep 02', sourceEvent: 'Completed service on credit; invoice issued', debitAccount: 'Accounts Receivable', creditAccount: 'Service Revenue', amount: 60000, evidenceType: 'Signed Tax Invoice & Acceptance', status: 'Verified' },
-  { id: '2', docId: 'A02', date: 'Sep 04', sourceEvent: 'Completed service paid immediately into bank', debitAccount: 'Bank', creditAccount: 'Service Revenue', amount: 40000, evidenceType: 'Bank Receipt & Cash Memo', status: 'Verified' },
-  { id: '3', docId: 'A03', date: 'Sep 05', sourceEvent: 'September rent paid by bank', debitAccount: 'Rent Expense', creditAccount: 'Bank', amount: 12000, evidenceType: 'Landlord Receipt & Bank Advice', status: 'Verified' },
-  { id: '4', docId: 'A04', date: 'Sep 06', sourceEvent: 'September software subscription paid by bank', debitAccount: 'Software Subscription Expense', creditAccount: 'Bank', amount: 6000, evidenceType: 'Vendor Tax Invoice', status: 'Verified' },
-  { id: '5', docId: 'A05', date: 'Sep 10', sourceEvent: 'Bank collection against A01 invoice', debitAccount: 'Bank', creditAccount: 'Accounts Receivable', amount: 35000, evidenceType: 'Bank Deposit Confirmation', status: 'Verified' },
-  { id: '6', docId: 'A06', date: 'Sep 12', sourceEvent: 'September contractor service paid by bank', debitAccount: 'Contractor Expense', creditAccount: 'Bank', amount: 18000, evidenceType: 'Contractor Work Slip & Advice', status: 'Verified' },
-  { id: '7', docId: 'A07', date: 'Sep 20', sourceEvent: 'September wages earned but unpaid', debitAccount: 'Wages Expense', creditAccount: 'Wages Payable', amount: 10000, evidenceType: 'Approved Payroll Schedule', status: 'Verified' },
-  { id: '8', docId: 'A08', date: 'Sep 22', sourceEvent: 'Bank payment against A07 wage liability', debitAccount: 'Wages Payable', creditAccount: 'Bank', amount: 4000, evidenceType: 'Payroll Bank Transfer Ref', status: 'Verified' },
-  { id: '9', docId: 'A09', date: 'Sep 24', sourceEvent: 'Refundable customer advance received in bank', debitAccount: 'Bank', creditAccount: 'Unearned Revenue (Liability)', amount: 15000, evidenceType: 'Client Advance Receipt Voucher', status: 'Verified' },
-  { id: '10', docId: 'A10', date: 'Sep 26', sourceEvent: 'Part of A09 advance refunded by bank', debitAccount: 'Unearned Revenue (Liability)', creditAccount: 'Bank', amount: 3000, evidenceType: 'Bank Debit Advice & Refund Slip', status: 'Verified' },
-  { id: '11', docId: 'A11', date: 'Sep 28', sourceEvent: 'Bank charge shown on bank advice', debitAccount: 'Bank Charges Expense', creditAccount: 'Bank', amount: 500, evidenceType: 'Bank Statement Advice Note', status: 'Verified' },
-  { id: '12', docId: 'A12', date: 'Sep 29', sourceEvent: 'Equipment bought and paid through bank', debitAccount: 'Equipment Asset (Capitalized)', creditAccount: 'Bank', amount: 5000, evidenceType: 'Asset Purchase Invoice & Warranty', status: 'Verified' },
+  { id: '1', docId: 'A01', date: 'Sep 02', sourceEvent: 'Completed service on credit; invoice issued', debitAccount: '', creditAccount: '', amount: 60000, evidenceType: 'Signed Tax Invoice & Acceptance', status: 'Flagged' },
+  { id: '2', docId: 'A02', date: 'Sep 04', sourceEvent: 'Completed service paid immediately into bank', debitAccount: '', creditAccount: '', amount: 40000, evidenceType: 'Bank Receipt & Cash Memo', status: 'Flagged' },
+  { id: '3', docId: 'A03', date: 'Sep 05', sourceEvent: 'September rent paid by bank', debitAccount: '', creditAccount: '', amount: 12000, evidenceType: 'Landlord Receipt & Bank Advice', status: 'Flagged' },
+  { id: '4', docId: 'A04', date: 'Sep 06', sourceEvent: 'September software subscription paid by bank', debitAccount: '', creditAccount: '', amount: 6000, evidenceType: 'Vendor Tax Invoice', status: 'Flagged' },
+  { id: '5', docId: 'A05', date: 'Sep 10', sourceEvent: 'Bank collection against A01 invoice', debitAccount: '', creditAccount: '', amount: 35000, evidenceType: 'Bank Deposit Confirmation', status: 'Flagged' },
+  { id: '6', docId: 'A06', date: 'Sep 12', sourceEvent: 'September contractor service paid by bank', debitAccount: '', creditAccount: '', amount: 18000, evidenceType: 'Contractor Work Slip & Advice', status: 'Flagged' },
+  { id: '7', docId: 'A07', date: 'Sep 20', sourceEvent: 'September wages earned but unpaid', debitAccount: '', creditAccount: '', amount: 10000, evidenceType: 'Approved Payroll Schedule', status: 'Flagged' },
+  { id: '8', docId: 'A08', date: 'Sep 22', sourceEvent: 'Bank payment against A07 wage liability', debitAccount: '', creditAccount: '', amount: 4000, evidenceType: 'Payroll Bank Transfer Ref', status: 'Flagged' },
+  { id: '9', docId: 'A09', date: 'Sep 24', sourceEvent: 'Refundable customer advance received in bank', debitAccount: '', creditAccount: '', amount: 15000, evidenceType: 'Client Advance Receipt Voucher', status: 'Flagged' },
+  { id: '10', docId: 'A10', date: 'Sep 26', sourceEvent: 'Part of A09 advance refunded by bank', debitAccount: '', creditAccount: '', amount: 3000, evidenceType: 'Bank Debit Advice & Refund Slip', status: 'Flagged' },
+  { id: '11', docId: 'A11', date: 'Sep 28', sourceEvent: 'Bank charge shown on bank advice', debitAccount: '', creditAccount: '', amount: 500, evidenceType: 'Bank Statement Advice Note', status: 'Flagged' },
+  { id: '12', docId: 'A12', date: 'Sep 29', sourceEvent: 'Equipment bought and paid through bank', debitAccount: '', creditAccount: '', amount: 5000, evidenceType: 'Asset Purchase Invoice & Warranty', status: 'Flagged' },
 ];
 
 export interface Session05WorkstationState {
