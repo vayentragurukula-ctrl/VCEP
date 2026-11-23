@@ -153,6 +153,7 @@ function getCheckItemBadge(status: 'passed' | 'failed' | 'warning' | 'pending') 
 
 export default function GuidedLearningPage(){
  const [selected,setSelected]=useState(1);
+ const [briefView,setBriefView]=useState(true);
  const [section,setSection]=useState<Section>('Overview');
  const [sessionStage,setSessionStage]=useState<number>(1);
  const [draft,setDraft]=useState<Record<string,string>>({});
@@ -1120,7 +1121,15 @@ export default function GuidedLearningPage(){
      </div>
      <span className="v3-status-notice">In-Platform Work · Practice saved in this browser</span>
    </div>
-   <div className="v3-mobile-selector"><label htmlFor="v3-mobile-select">Choose session</label><select id="v3-mobile-select" value={selected} onChange={e=>choose(Number(e.target.value))}>{safeCatalogue.map(s=><option key={s.id} value={s.id}>{padded(s.id)} · {s.title}</option>)}</select></div>
+   {selected >= 1 && selected <= 24 && !loading && !authError && (
+      <div className="vcep-brief-view-toolbar" role="group" aria-label="Session reading preference">
+        <span>Focus on the practical work</span>
+        <button type="button" onClick={() => setBriefView((prev) => !prev)} aria-pressed={!briefView}>
+          {briefView ? 'Show complete context' : 'Use brief view'}
+        </button>
+      </div>
+    )}
+    <div className="v3-mobile-selector"><label htmlFor="v3-mobile-select">Choose session</label><select id="v3-mobile-select" value={selected} onChange={e=>choose(Number(e.target.value))}>{safeCatalogue.map(s=><option key={s.id} value={s.id}>{padded(s.id)} · {s.title}</option>)}</select></div>
    {selected > 24 && (
      <nav aria-label="Lesson stages" className="v3-tabs">{sections.map((s,i)=><button key={s} type="button" className={section===s?'is-active':''} aria-current={section===s?'step':undefined} onClick={()=>setSection(s)}><span className="v3-tab-number">{padded(i+1)}</span>{s}{s==='Work' ? ' · Workstation' : ''}</button>)}</nav>
    )}
@@ -1168,7 +1177,7 @@ export default function GuidedLearningPage(){
 
    {!loading && !authError && lesson && (
      selected >= 1 && selected <= 24 ? (
-       <div className="v3-content" key={'session-' + selected + '-journey'}>
+       <div className={`v3-content ${briefView ? 'vcep-focus-mode' : ''}`} key={'session-' + selected + '-journey'}>
          {selected === 1 && <Session01StartupJourney onUpdateDraft={update} />}
          {selected === 2 && <Session02TeamworkJourney onUpdateDraft={update} />}
          {selected === 3 && <Session03CommunicationJourney onUpdateDraft={update} />}
