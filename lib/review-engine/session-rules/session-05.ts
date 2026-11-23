@@ -81,7 +81,8 @@ export function evaluateSession05(ctx: ReviewContext): SessionReviewReport {
 
   // Check 1: 12-Event Journal Completeness
   const hasAll12 = Array.isArray(rows) && rows.length === 12;
-  const allAccountsAssigned = hasAll12 && rows.every((r: any) => r.debitAccount && r.creditAccount && r.amount > 0);
+  const allAccountsAssigned = hasAll12 && new Set(rows.map((r: any) => r.docId)).size === 12
+    && rows.every((r: any) => r.debitAccount && r.creditAccount && Number(r.amount) > 0);
 
   workChecks.push({
     id: 's05-w1-register',
@@ -97,9 +98,11 @@ export function evaluateSession05(ctx: ReviewContext): SessionReviewReport {
     actionLabel: 'Complete Journal Entries',
   });
 
-  // Check 2: Balance Check (₹208,500 Dr = ₹208,500 Cr)
-  const totalDebits = rows.reduce((sum: number, r: any) => sum + (Number(r.amount) || 0), 0);
-  const isBalanced = totalDebits === 208500;
+  // Count only genuinely journalised entries. Raw voucher amounts are not
+  // evidence that a student has posted any debit or credit accounts.
+  const totalDebits = rows.reduce((sum: number, r: any) => sum + (r.debitAccount ? Number(r.amount) || 0 : 0), 0);
+  const totalCredits = rows.reduce((sum: number, r: any) => sum + (r.creditAccount ? Number(r.amount) || 0 : 0), 0);
+  const isBalanced = allAccountsAssigned && totalDebits === 208500 && totalCredits === 208500;
 
   workChecks.push({
     id: 's05-w2-balance',
@@ -107,7 +110,7 @@ export function evaluateSession05(ctx: ReviewContext): SessionReviewReport {
     description: 'Verify that total journal debits equal total credits of ₹208,500 with zero reconciliation variance.',
     passed: isBalanced,
     status: isBalanced ? 'passed' : totalDebits > 0 ? 'failed' : 'pending',
-    studentValue: isBalanced ? '₹208,500 (Balanced · Zero Variance)' : `₹${totalDebits.toLocaleString('en-IN')} (Target: ₹208,500)`,
+    studentValue: isBalanced ? 'Both sides ₹208,500' : `Debit ₹${totalDebits.toLocaleString('en-IN')} · Credit ₹${totalCredits.toLocaleString('en-IN')} (Target each: ₹208,500)`,
     expectedRequirement: 'Total journal debits and credits must equal exactly ₹208,500 across the 12 transactions.',
     whyIncorrect: `Total debits must equal ₹208,500. Currently calculated: ₹${totalDebits.toLocaleString('en-IN')}. Check amounts on each entry.`,
     conceptToRevisit: 'Heading 2 · Balance Gauge',
@@ -172,6 +175,42 @@ export function evaluateSession05(ctx: ReviewContext): SessionReviewReport {
     conceptToRevisit: 'Heading 2 · Equipment Logic (A12)',
     actionTab: 'Work',
     actionLabel: 'Correct A12 Entry',
+  });
+
+  // Source-grounded row-level audit: balanced totals alone do not prove
+  // correct account classification. Case A requires all 12 exact source events.
+  const approvedEntries: Record<string, { debit: string; credit: string; amount: number }> = {
+    A01: { debit: 'Accounts Receivable', credit: 'Service Revenue', amount: 60000 },
+    A02: { debit: 'Bank', credit: 'Service Revenue', amount: 40000 },
+    A03: { debit: 'Rent Expense', credit: 'Bank', amount: 12000 },
+    A04: { debit: 'Software Subscription Expense', credit: 'Bank', amount: 6000 },
+    A05: { debit: 'Bank', credit: 'Accounts Receivable', amount: 35000 },
+    A06: { debit: 'Contractor Expense', credit: 'Bank', amount: 18000 },
+    A07: { debit: 'Wages Expense', credit: 'Wages Payable', amount: 10000 },
+    A08: { debit: 'Wages Payable', credit: 'Bank', amount: 4000 },
+    A09: { debit: 'Bank', credit: 'Unearned Revenue (Liability)', amount: 15000 },
+    A10: { debit: 'Unearned Revenue (Liability)', credit: 'Bank', amount: 3000 },
+    A11: { debit: 'Bank Charges Expense', credit: 'Bank', amount: 500 },
+    A12: { debit: 'Equipment Asset (Capitalized)', credit: 'Bank', amount: 5000 },
+  };
+  const accurateCount = rows.filter((row: any) => {
+    const expected = approvedEntries[String(row.docId || '')];
+    return !!expected && row.debitAccount === expected.debit
+      && row.creditAccount === expected.credit && Number(row.amount) === expected.amount;
+  }).length;
+  const allEntriesAccurate = allAccountsAssigned && accurateCount === 12;
+  workChecks.push({
+    id: 's05-w6-source-accuracy',
+    title: 'Case A Source-to-Journal Accuracy',
+    description: 'Verify the actual debit and credit account for every voucher, not only the aggregate balance.',
+    passed: allEntriesAccurate,
+    status: allEntriesAccurate ? 'passed' : accurateCount > 0 ? 'warning' : 'pending',
+    studentValue: `${accurateCount} of 12 entries match their supporting vouchers`,
+    expectedRequirement: 'All A01–A12 must be classified correctly with original amounts and evidence.',
+    whyIncorrect: 'Recheck the source vouchers and account classifications. A balanced journal can still contain incorrect entries.',
+    conceptToRevisit: 'Journal register · Source vouchers',
+    actionTab: 'Work',
+    actionLabel: 'Review Journal Accuracy',
   });
 
   // ----------------------------------------------------
