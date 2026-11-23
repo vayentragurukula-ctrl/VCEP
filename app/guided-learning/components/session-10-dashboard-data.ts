@@ -141,7 +141,7 @@ export const INITIAL_S10_STATE: Session10WorkstationState = {
   managementQuestion:
     'Is our 25% September revenue growth converting into sustainable operating margin and cash, or are mounting delivery costs and uncollected trade receivables threatening liquidity?',
   directCostInput: 75000,
-  selectedKpiIds: ['kpi-revenue', 'kpi-gross-margin', 'kpi-operating-margin', 'kpi-receivables'],
+  selectedKpiIds: [],
   memoText: '',
   visualizationJustification: '',
   governance: {
