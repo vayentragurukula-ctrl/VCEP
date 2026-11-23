@@ -22,6 +22,7 @@ import {
   type RawReceiptItem,
   type CleanReceiptItem,
   type ExceptionItem,
+  type ReceiptDecision,
 } from './session-07-cleaning-data.ts';
 import { evaluateSession07 } from '../../../lib/review-engine/session-rules/session-07.ts';
 import type { SessionReviewReport } from '../../../lib/review-engine/types.ts';
@@ -311,14 +312,52 @@ export function Session07CleaningJourney({
 
   // Handlers
   const handleResetToApproved = () => {
-    if (window.confirm('Reset dataset to canonical Case B approved Clean and Exceptions tables?')) {
+    if (window.confirm('Clear your receipt classifications and start again? Existing official submissions are unchanged.')) {
       updateState((prev) => ({
         ...prev,
-        cleanRows: INITIAL_CLEAN_ROWS,
-        exceptions: INITIAL_EXCEPTIONS,
-        formulaNotes: INITIAL_S07_STATE.formulaNotes,
+        decisions: {},
+        cleanRows: [],
+        exceptions: [],
+        formulaNotes: '',
       }));
     }
+  };
+
+  const classifyReceipt = (rowId: string, route: '' | ReceiptDecision['route'], category?: ExceptionItem['category']) => {
+    updateState((prev) => {
+      const decisions: Record<string, ReceiptDecision> = { ...prev.decisions };
+      if (!route) {
+        delete decisions[rowId];
+      } else {
+        decisions[rowId] = { route, ...(category ? { category } : {}) };
+      }
+      const cleanRows: CleanReceiptItem[] = prev.rawReceipts
+        .filter((row) => decisions[row.id]?.route === 'approved' && row.amount !== 'blank')
+        .map((row, index) => ({
+          id: 'c' + row.id,
+          cleanId: 'C' + String(index + 1).padStart(2, '0'),
+          sourceId: row.sourceId,
+          isoDate: row.receivedDate,
+          customerStandard: row.customerRaw.trim().toLowerCase() === 'asha' ? 'Asha' : row.customerRaw.trim(),
+          amount: Number(row.amount),
+          rowStatus: 'Pending Review',
+        }));
+      const exceptions: ExceptionItem[] = prev.rawReceipts
+        .filter((row) => decisions[row.id]?.route === 'quarantine' && decisions[row.id]?.category)
+        .map((row) => ({
+          id: 'e' + row.id,
+          sourceId: row.sourceId === 'R02' && row.id === '3' ? 'R02 (Row 3)' : row.sourceId,
+          rawCustomer: row.customerRaw,
+          rawAmount: row.amount === 'blank' ? 'blank' : Number(row.amount),
+          rawDate: row.receivedDate,
+          category: decisions[row.id].category!,
+          riskDescription: 'Student-identified exception for faculty review',
+          auditAction: 'Held for investigation: ' + decisions[row.id].category,
+          status: decisions[row.id].category === 'Duplicate Entry' ? 'Resolved / Excluded' : 'Quarantined (Suspense)',
+          officerNotes: '',
+        }));
+      return { ...prev, decisions, cleanRows, exceptions };
+    });
   };
 
   const handleRunReview = () => {
@@ -606,6 +645,59 @@ export function Session07CleaningJourney({
             onSelectTask={() => setActiveTaskId('S07-T02')}
           >
             <div className="space-y-6">
+              {/* Students route the actual seven rows before seeing the resulting work tables. */}
+              <div className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 space-y-3" data-testid="s07-student-classification">
+                <h4 className="font-semibold text-slate-900 text-sm">Your classification desk</h4>
+                <p className="text-xs text-slate-600">Decide which receipts are safe to use and which need investigation. Choose a reason for each held record. The raw source never changes.</p>
+                {state.rawReceipts.map((row) => {
+                  const decision = state.decisions?.[row.id];
+                  return (
+                    <div key={row.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 border-t border-slate-100 pt-3 items-center">
+                      <span className="text-xs font-semibold text-slate-800">Row {row.id} · {row.sourceId}</span>
+                      <label className="text-xs text-slate-700">
+                        Route
+                        <select
+                          aria-label={`Route receipt row ${row.id}`}
+                          className="mt-1 w-full rounded-md border border-slate-300 p-2 bg-white"
+                          value={decision?.route || ''}
+                          onChange={(e) => classifyReceipt(row.id, e.target.value as '' | ReceiptDecision['route'])}
+                        >
+                          <option value="">Not classified</option>
+                          <option value="approved">Approve into Clean</option>
+                          <option value="quarantine">Quarantine for review</option>
+                        </select>
+                      </label>
+                      {decision?.route === 'quarantine' ? (
+                        <label className="text-xs text-slate-700">
+                          Reason
+                          <select
+                            aria-label={`Reason for receipt row ${row.id}`}
+                            className="mt-1 w-full rounded-md border border-slate-300 p-2 bg-white"
+                            value={decision.category || ''}
+                            onChange={(e) => classifyReceipt(row.id, 'quarantine', e.target.value as ExceptionItem['category'])}
+                          >
+                            <option value="">Choose a reason</option>
+                            <option value="Duplicate Entry">Duplicate entry</option>
+                            <option value="Invalid Date">Invalid date</option>
+                            <option value="Missing Value">Missing amount</option>
+                            <option value="Ambiguous Date Format">Ambiguous date</option>
+                          </select>
+                        </label>
+                      ) : (
+                        <span className="text-xs text-slate-500">Decide from the source evidence</span>
+                      )}
+                    </div>
+                  );
+                })}
+                <p className="text-xs font-medium text-slate-700">{Object.keys(state.decisions || {}).length} / {state.rawReceipts.length} receipts classified. Check the resulting Clean and Exceptions tables below.</p>
+                {state.rawReceipts.some((row) => row.amount === 'blank' && state.decisions?.[row.id]?.route === 'approved') && (
+                  <p role="alert" className="text-xs text-rose-700">A missing amount cannot be approved without supporting evidence. It has not been added to the Clean total.</p>
+                )}
+              </div>
+
+              <details className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <summary className="cursor-pointer text-xs font-semibold text-teal-800">Review the data-cleaning principles</summary>
+                <div className="pt-3">
               {/* 4 Cardinal Data Cleaning Rules */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-slate-50 p-4 rounded-xl border border-amber-200/80 shadow-sm space-y-2">
@@ -652,6 +744,8 @@ export function Session07CleaningJourney({
                   </p>
                 </div>
               </div>
+                </div>
+              </details>
             </div>
           </TaskCard>
         </section>
@@ -676,7 +770,7 @@ export function Session07CleaningJourney({
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  Reset Approved State
+                  Clear My Classifications
                 </button>
                 <button
                   type="button"
@@ -697,7 +791,7 @@ export function Session07CleaningJourney({
             title="Clean and Quarantine"
             instruction="Segregate verified records into the Clean Approved dataset while routing suspect, duplicate, or unverified records to the Quarantine Suspense Register."
             whyMatters="Quarantining preserves business continuity: verified customer receipts can immediately flow to the general ledger and receivables matching, while unresolved exceptions are placed in a monitored suspense queue for investigator follow-up."
-            statusText="3 Clean · 4 Quarantined"
+            statusText={`${state.cleanRows.length} clean · ${state.exceptions.length} quarantined`}
             isActive={activeTaskId === 'S07-T03'}
             onSelectTask={() => setActiveTaskId('S07-T03')}
           >
@@ -720,7 +814,7 @@ export function Session07CleaningJourney({
                     activeTableView === 'clean' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border'
                   }`}
                 >
-                  Clean Approved Only (3 Rows / ₹25,000)
+                  Clean Approved Only
                 </button>
                 <button
                   type="button"
@@ -729,7 +823,7 @@ export function Session07CleaningJourney({
                     activeTableView === 'exceptions' ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border'
                   }`}
                 >
-                  Exceptions Register Only (4 Rows / ₹19,000)
+                  Exceptions Register Only
                 </button>
               </div>
 
