@@ -392,21 +392,21 @@ export const DEFAULT_HANDOVER_NOTES =
 
 export const DEFAULT_SESSION_18_STATE: Session18State = {
   selectedSolution: 'option-a',
-  solutionRationale: DEFAULT_SOLUTION_RATIONALE,
+  solutionRationale: '',
   scopeItems: INITIAL_SCOPE_ITEMS,
   tasks: INITIAL_WBS_TASKS,
   acceptanceCriteria: INITIAL_ACCEPTANCE_CRITERIA,
   risks: INITIAL_RISK_REGISTER,
-  handoverNotes: DEFAULT_HANDOVER_NOTES,
+  handoverNotes: '',
   governance: {
-    preparerName: 'Priya Sharma (Financial Modeler)',
-    reviewerName: 'Meera Nair (Risk & Audit Lead)',
-    decisionOwnerName: 'Rahul Deshmukh (Engagement Lead / MD Proxy)',
-    approvalStatus: 'Approved',
-    signoffDate: '2026-11-06',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwnerName: '',
+    approvalStatus: 'Draft',
+    signoffDate: '',
     fileVersion: 'StudentID_S18_v01.xlsx',
   },
-  checkedIndices: [0, 1, 2, 3, 4],
+  checkedIndices: [],
 };
 
 export const S18_RUBRIC = [
