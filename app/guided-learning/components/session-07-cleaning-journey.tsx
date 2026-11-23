@@ -524,7 +524,7 @@ export function Session07CleaningJourney({
             title="Inspect Raw Receipts"
             instruction="Examine the seven raw receipt records imported from field operations in the immutable Case B Raw Inflow Grid."
             whyMatters="In corporate audit and forensic accounting, raw data serves as legal source evidence. Under no circumstances should raw files be edited in-place, overwritten, or rows deleted; all data cleansing must branch into clean working views and quarantine logs."
-            statusText="7 Records Verified"
+            statusText="7 source records · preserved"
             isActive={activeTaskId === 'S07-T01'}
             onSelectTask={() => setActiveTaskId('S07-T01')}
           >
@@ -552,31 +552,20 @@ export function Session07CleaningJourney({
                         <th className="py-3 px-4 w-32">Received Date</th>
                         <th className="py-3 px-4 w-36">Customer Raw</th>
                         <th className="py-3 px-4 w-32 text-right">Raw Amount (₹)</th>
-                        <th className="py-3 px-6 min-w-[240px]">Data Quality Audit Findings</th>
-                        <th className="py-3 px-3 w-28 text-center">Action Status</th>
+                        <th className="py-3 px-6 min-w-[240px]">Investigation Prompt</th>
+                        <th className="py-3 px-3 w-28 text-center">Your Decision</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 font-sans">
                       {state.rawReceipts.map((row) => (
-                        <tr
-                          key={row.id}
-                          className={`hover:bg-slate-50 transition-colors ${
-                            row.flagType === 'valid'
-                              ? 'bg-emerald-50/20'
-                              : row.flagType === 'duplicate'
-                              ? 'bg-amber-50/30'
-                              : row.flagType === 'blank_amount'
-                              ? 'bg-rose-50/30'
-                              : 'bg-indigo-50/10'
-                          }`}
-                        >
+                        <tr key={row.id} className="hover:bg-slate-50 transition-colors">
                           <td className="py-3 px-3 text-center font-mono text-slate-400">
                             {row.id}
                           </td>
                           <td className="py-3 px-3 font-mono font-bold text-slate-900">
                             {row.sourceId}
                           </td>
-                          <td className={`py-3 px-4 font-mono ${row.flagType === 'invalid_date' || row.flagType === 'ambiguous_date' ? 'text-rose-700 font-bold' : 'text-slate-700'}`}>
+                          <td className="py-3 px-4 font-mono text-slate-700">
                             {row.receivedDate}
                           </td>
                           <td className="py-3 px-4 font-mono text-slate-800">
@@ -585,33 +574,15 @@ export function Session07CleaningJourney({
                           <td className={`py-3 px-4 text-right font-mono font-bold ${row.amount === 'blank' ? 'text-rose-600 italic' : 'text-slate-900'}`}>
                             {row.amount === 'blank' ? 'blank' : `₹${Number(row.amount).toLocaleString('en-IN')}`}
                           </td>
-                          <td className="py-3 px-6">
-                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-medium ${
-                              row.flagType === 'valid'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : row.flagType === 'duplicate'
-                                ? 'bg-amber-100 text-amber-900'
-                                : row.flagType === 'blank_amount'
-                                ? 'bg-rose-100 text-rose-800'
-                                : row.flagType === 'invalid_date'
-                                ? 'bg-rose-100 text-rose-800'
-                                : 'bg-indigo-100 text-indigo-800'
-                            }`}>
-                              {row.flag}
-                            </span>
+                          <td className="py-3 px-6 text-xs text-slate-500">
+                            Check ID, date, customer and amount
                           </td>
-                          <td className="py-3 px-3 text-center font-mono text-[11px]">
-                            {row.flagType === 'valid' || row.flagType === 'case_mismatch' ? (
-                              <span className="text-emerald-700 font-semibold flex items-center justify-center gap-1">
-                                <Check className="w-3.5 h-3.5" />
-                                Clean
-                              </span>
-                            ) : (
-                              <span className="text-amber-700 font-semibold flex items-center justify-center gap-1">
-                                <Ban className="w-3.5 h-3.5" />
-                                Quarantine
-                              </span>
-                            )}
+                          <td className="py-3 px-3 text-center text-[11px] font-semibold text-slate-700">
+                            {state.decisions?.[row.id]?.route === 'approved'
+                              ? 'Selected: Clean'
+                              : state.decisions?.[row.id]?.route === 'quarantine'
+                              ? 'Selected: Hold'
+                              : 'To investigate'}
                           </td>
                         </tr>
                       ))}
