@@ -275,7 +275,7 @@ export const WORKFLOW_SCENARIOS: WorkflowScenario[] = [
 // ==========================================
 
 export interface StudentClaimAuditState {
-  userVerdict: AuditVerdict;
+  userVerdict: AuditVerdict | '';
   userRecalculation: string;
   userCorrection: string;
   isAudited: boolean;
@@ -302,41 +302,21 @@ export interface Session14State {
 
 export const DEFAULT_SESSION_14_STATE: Session14State = {
   claimAudits: {
-    CLM_01: {
-      userVerdict: 'FALSE',
-      userRecalculation: '(150,000 - 120,000) / 120,000 = +25.0%',
-      userCorrection: 'September revenue grew 25.0% MoM (₹30,000 expansion), not 30%.',
-      isAudited: true,
-    },
-    CLM_02: {
-      userVerdict: 'FALSE',
-      userRecalculation: '₹30,000 / ₹150,000 = 20.0% (down from 22.5% in Aug and 25.0% in Jul)',
-      userCorrection: 'Operating profit margin contracted to 20.0% due to a 38.9% surge in direct delivery costs.',
-      isAudited: true,
-    },
-    CLM_03: {
-      userVerdict: 'MISLEADING',
-      userRecalculation: 'Receivables jumped +133% vs July to ₹70,000 (46.7% of revenue). Source has zero payment timestamps.',
-      userCorrection: 'High receivables indicate working capital lockup. Claiming customers paid on time is an unsupported hallucination.',
-      isAudited: true,
-    },
-    CLM_04: {
-      userVerdict: 'FATAL_RECOMMENDATION',
-      userRecalculation: 'A 20% discount cuts revenue to ₹120k; GP drops to ₹45k which equals overheads, leaving ₹0 operating profit.',
-      userCorrection: 'Reject blanket discounts. Squeezing prices by 20% completely eliminates operating profit.',
-      isAudited: true,
-    },
+    CLM_01: { userVerdict: '' as const, userRecalculation: '', userCorrection: '', isAudited: false },
+    CLM_02: { userVerdict: '' as const, userRecalculation: '', userCorrection: '', isAudited: false },
+    CLM_03: { userVerdict: '' as const, userRecalculation: '', userCorrection: '', isAudited: false },
+    CLM_04: { userVerdict: '' as const, userRecalculation: '', userCorrection: '', isAudited: false },
   },
-  correctedMemoText: DEFAULT_CORRECTED_MEMO,
+  correctedMemoText: '',
   selectedScenario: 'normal',
   stoppingConditionActive: false,
   governance: {
-    preparerName: 'Commercial Analyst / Student',
-    reviewerName: 'Quality Lead / Senior Auditor',
-    decisionOwnerName: 'Finance Controller',
-    approvalStatus: 'Approved',
-    approvalTimestamp: '2026-10-31 16:30 IST',
-    autonomousDecisionStatement: 'Rejected AI blanket discount advice, verified +25.0% revenue growth, and halted release during missing-input drill.',
+    preparerName: '',
+    reviewerName: '',
+    decisionOwnerName: '',
+    approvalStatus: 'Pending Review',
+    approvalTimestamp: '',
+    autonomousDecisionStatement: '',
   },
   fileVersion: 'StudentID_S14_v01.xlsx',
   lastSavedAt: null,
