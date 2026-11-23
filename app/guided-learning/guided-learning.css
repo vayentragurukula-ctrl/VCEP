@@ -4544,3 +4544,44 @@ input.vcep-ack-checkbox,
   }
 }
 
+
+
+/* VCEP brief view: foreground practice, never delete required source context. */
+.vcep-brief-view-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0 16px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #dce5e9;
+  border-radius: 10px;
+  color: #334155;
+  font-size: 13px;
+}
+.vcep-brief-view-toolbar button {
+  border: 1px solid #0f766e;
+  border-radius: 8px;
+  padding: 6px 11px;
+  background: #ffffff;
+  color: #0f766e;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.vcep-brief-view-toolbar button:focus-visible {
+  outline: 3px solid #e5af2e;
+  outline-offset: 2px;
+}
+.vcep-focus-mode .vcep-journey-subtitle,
+.vcep-focus-mode .vcep-section-title-wrap > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.vcep-focus-mode .vcep-journey-badge-row > :nth-child(n + 2) {
+  display: none;
+}
