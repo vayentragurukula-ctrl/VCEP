@@ -4544,3 +4544,16 @@ input.vcep-ack-checkbox,
   }
 }
 
+
+
+/* Consistent concise task directions for Sessions 01–24.
+   Full curriculum instructions remain accessible; no forms or work are hidden. */
+.v3-root [data-task-id] .vcep-task-instruction-wrap{margin:0 0 14px}
+.v3-root [data-task-id] .vcep-task-instruction{font-size:13.5px;line-height:1.55;color:#64748b;margin:0 0 10px;white-space:normal}
+.v3-root [data-task-id] .vcep-task-more{border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;padding:8px 12px;margin-top:8px}
+.v3-root [data-task-id] .vcep-task-more summary{font-size:12px;font-weight:700;color:#0f766e;cursor:pointer}
+.v3-root [data-task-id] .vcep-task-more p{font-size:13px;line-height:1.65;color:#334155;margin-top:9px;white-space:pre-line}
+.v3-root [data-task-id] :is(input,textarea,select){max-width:100%;min-width:0}
+.v3-root [data-task-id] :is(input,textarea,select):focus-visible{outline:2px solid #0f766e;outline-offset:2px}
+.v3-root [data-task-id] :is(button,input,textarea,select){scroll-margin-block:110px}
+@media(max-width:767px){.v3-root [data-task-id] .vcep-task-more{padding:10px 12px}}
