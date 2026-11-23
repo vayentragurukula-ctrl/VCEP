@@ -848,19 +848,20 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
               <div style={{ textAlign: 'right' }}>
                 <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700 }}>INTERVIEW RESULT:</span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#15803d' }}>
-                  {state.governance.interviewScore} / 10 pts (Passed)
+                  Pending official faculty result
                 </div>
               </div>
             </div>
 
             <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '0 0 10px' }}>
-              Independent human assessment: evaluated on mathematical precision, conceptual justification, and professional ethics (not accent or fluency).
+              Official marks are published only in the faculty-reviewed submission below. This practice panel cannot certify or award grades.
             </p>
 
             <textarea
               rows={3}
               value={state.interviewerFeedback}
-              onChange={(e) => saveState({ ...state, interviewerFeedback: e.target.value })}
+              readOnly
+              aria-label="Faculty feedback is read-only; official grading is shown in the submission station"
               style={{
                 width: '100%',
                 padding: '10px 12px',
