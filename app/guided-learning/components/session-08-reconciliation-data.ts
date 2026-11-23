@@ -239,20 +239,18 @@ export const INITIAL_S08_STATE: Session08WorkstationState = {
   unpresentedCheque: UNPRESENTED_CHEQUE_INR,
   depositInTransit: DEPOSIT_IN_TRANSIT_INR,
   actualStatement: ACTUAL_STATEMENT_INR,
-  discrepancies: INITIAL_DISCREPANCIES,
-  journalEntries: INITIAL_JOURNAL_ENTRIES,
+  discrepancies: INITIAL_DISCREPANCIES.map(d => ({ ...d, userClassification: 'unclassified' as const, isMatched: false })),
+  journalEntries: INITIAL_JOURNAL_ENTRIES.map(j => ({ ...j, drAccount: '', crAccount: '', narration: '', verified: false })),
   exceptionLog: INITIAL_EXCEPTION_LOG,
-  peerChallengeNote:
-    'The ₹10,000 customer deposit is already entered in our Cash Book as a debit to Bank and credit to Customer Receivables. It is simply in transit through the clearinghouse. Posting it again would duplicate cash assets and understate receivables, creating fictitious accounting entries. Timing differences clear naturally through the banking network and must never receive journal entries.',
-  antiPlugPledge:
-    'I affirm that no unexplained plugs, suspense dumps, or forced balancing entries have been created. Financial reconciliations must achieve zero variance purely through verified source documents and auditable timing differences.',
+  peerChallengeNote: '',
+  antiPlugPledge: '',
   governance: {
     studentId: 'STU-2026-0881',
     fileVersion: 'StudentID_S08_v01.xlsx',
-    contributionSummary: 'Prepared side-by-side comparison, classified 4 discrepancies, computed adjusted cash book balance (₹87,200), and proved 3-column BRS zero-variance bridge to bank statement (₹83,200).',
-    peerCorrection: 'Peer controller challenged posting timing items; verified that timing items clear naturally and do not receive ledger entries.',
+    contributionSummary: '',
+    peerCorrection: '',
   },
-  checkedIndices: [0, 1, 2, 3, 4, 5],
+  checkedIndices: [],
 };
 
 export function loadSession08State(): Session08WorkstationState {
