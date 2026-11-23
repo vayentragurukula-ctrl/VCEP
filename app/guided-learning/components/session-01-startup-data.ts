@@ -1471,12 +1471,12 @@ export function buildDefaultPitchDeck(caseObj: VentureCase, decisions: StartupLa
 export function loadStartupLabState(): StartupLabState {
   const defaultCase = VENTURE_CASES[0];
   const defaultBoardroom = {
-    roleId: 'role-strategy',
-    crisisChoice: 'strat-a',
-    crisisRationale: 'Founders personally delivering priority orders protects customer trust immediately. An honest phone call with a discount voucher turns an operational vendor breakdown into a loyalty-building moment.',
-    consequencesAnalysis: 'Immediate founder hustle costs zero additional cash while preserving the brand reputation for the remaining 25 rescheduled orders.',
-    assignedOwner: 'Founder & Strategy Lead together with Operations Lead',
-    recoveryPlan: 'Secure an alternate standby runner fleet and conduct morning dispatch audits before 8:00 AM daily.',
+    roleId: '',
+    crisisChoice: '',
+    crisisRationale: '',
+    consequencesAnalysis: '',
+    assignedOwner: '',
+    recoveryPlan: '',
     pitchProblem: '',
     pitchSolution: '',
     pitchTarget: '',
@@ -1485,32 +1485,32 @@ export function loadStartupLabState(): StartupLabState {
   };
 
   const defaultStage1 = {
-    selectedProblemId: 'prob-food',
-    targetCampusPersona: '1st & 2nd year undergraduates and tech interns living in campus hostels/PGs without kitchen access.',
-    opportunityStatement: 'Deliver healthy, hot homestyle lunch boxes directly to campus hostel gates at 1:15 PM sharp for ₹90.',
-    whyItMatters: 'Saves students 45 minutes of daily meal friction and provides nutritious food without expensive delivery surcharges.'
+    selectedProblemId: '',
+    targetCampusPersona: '',
+    opportunityStatement: '',
+    whyItMatters: ''
   };
 
   const defaultBrief = {
-    customerProblem: defaultCase.inconvenience,
-    targetPersona: defaultCase.persona,
-    existingAlternatives: 'Expensive delivery apps (₹300/meal) or unpalatable PG mess food.',
-    whyItMatters: 'Daily repeat necessity: students must eat every afternoon within a strict 45-minute timetable window.',
-    validationEvidence: '15 preliminary interviews in Block A confirmed 12 out of 15 students skip lunch or order unhealthily at least 4 days a week.'
+    customerProblem: '',
+    targetPersona: '',
+    existingAlternatives: '',
+    whyItMatters: '',
+    validationEvidence: ''
   };
 
   const defaultDecisions = {
-    decisionA: 'qa1',
-    decisionB: 'qb1',
-    decisionC: 'qc1',
-    decisionD: 'qd1',
-    decisionE: 'qe1'
+    decisionA: '',
+    decisionB: '',
+    decisionC: '',
+    decisionD: '',
+    decisionE: ''
   };
 
   const defaultStoryDecisions = {
-    zerodha: 'opt-transparency',
-    nykaa: 'opt-authenticity',
-    meesho: 'opt-unit-economics'
+    zerodha: '',
+    nykaa: '',
+    meesho: ''
   };
 
   const defaultState: StartupLabState = {
@@ -1519,16 +1519,16 @@ export function loadStartupLabState(): StartupLabState {
     stage1: defaultStage1,
     storyDecisions: defaultStoryDecisions,
     storyInspiration: {
-      chosenModel: 'zerodha',
-      inspirationReason: 'Zerodha proves that radical pricing transparency and customer education build sustainable word-of-mouth moats without burning venture capital.'
+      chosenModel: '',
+      inspirationReason: ''
     },
     selectedCaseId: 'quickbite',
     opportunityBrief: defaultBrief,
-    selectedInterviewQuestions: ['iq-past-behavior', 'iq-friction-depth', 'iq-workaround-cost'],
+    selectedInterviewQuestions: [],
     decisions: defaultDecisions,
     pricingTradeOff: {
-      choice: 'pt-scope',
-      rationale: 'Keeping price per unit firm while reducing initial delivery scope protects unit economics and establishes fair value.'
+      choice: '',
+      rationale: ''
     },
     vlab: {
       prediction: '',
@@ -1540,19 +1540,19 @@ export function loadStartupLabState(): StartupLabState {
       calcAttempted: false,
       processOrder: ['enquiry', 'order', 'delivery', 'invoice', 'collection', 'receipt'],
       processOwners: {
-        enquiry: 'Sales Lead',
-        order: 'Sales Lead',
-        delivery: 'Delivery Manager',
-        invoice: 'Finance Officer',
-        collection: 'Finance Officer',
-        receipt: 'Finance Officer',
+        enquiry: '',
+        order: '',
+        delivery: '',
+        invoice: '',
+        collection: '',
+        receipt: '',
       },
-      paymentRecommendation: 'reschedule',
-      paymentRationale: 'Pay ₹5,000 from available cash above safety reserve; defer remaining ₹10,000 until client receivables are collected.',
+      paymentRecommendation: '',
+      paymentRationale: '',
     },
     boardroom: defaultBoardroom,
     pitchDeck: {
-      slides: buildDefaultPitchDeck(defaultCase, defaultDecisions, defaultStage1, defaultBoardroom),
+      slides: buildDefaultPitchDeck(defaultCase, defaultDecisions, defaultStage1, defaultBoardroom).map(slide => ({ ...slide, fields: slide.fields.map(field => ({ ...field, value: '' })), speakerNotes: '' })),
       activeSlideIndex: 0
     },
     peerFeedback: {
@@ -1561,7 +1561,7 @@ export function loadStartupLabState(): StartupLabState {
       businessModelClear: null,
       tradeoffExplained: null,
     },
-    reflectionChange: 'I would spend more time interviewing early adopters directly rather than relying on initial assumptions.'
+    reflectionChange: ''
   };
 
   if (typeof window === 'undefined') return defaultState;
