@@ -242,9 +242,11 @@ export interface Session05WorkstationState {
 }
 
 export const INITIAL_S05_STATE: Session05WorkstationState = {
-  rows: INITIAL_JOURNAL_ROWS,
+  // Start with the approved vouchers but require the learner to journalise each event.
+  // Reference solutions remain separate from the student's own working state.
+  rows: INITIAL_JOURNAL_ROWS.map(row => ({ ...row, debitAccount: '', creditAccount: '', status: 'Flagged' as const })),
   selectedVoucherId: 'A01',
-  exceptionsNotes: 'A09 is classified as Unearned Revenue (Liability) because service delivery has not occurred in September. A12 is capitalized as an Equipment Asset rather than expensed, per accrual accounting principles. A05 collection reduces Accounts Receivable and does not create new revenue.',
+  exceptionsNotes: '',
   governance: {
     studentId: 'STU-2026-ACC',
     fileVersion: 'StudentID_S05_v01',
