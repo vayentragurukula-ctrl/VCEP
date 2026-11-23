@@ -550,9 +550,9 @@ export function Session22HiringJourney({ onUpdateDraft }: Props) {
                     }}
                   >
                     <strong style={{ color: '#15803d', display: 'block', marginBottom: '4px' }}>
-                      Model Candidate Defense (STAR+V Framework):
+                      Your independent response (STAR+V):
                     </strong>
-                    {active.candidateDefense}
+                    Explain the situation, your responsibility, your action, the result and how you verified it. Your answers must be your own; the panel will evaluate them.
                   </div>
                 </div>
               );
