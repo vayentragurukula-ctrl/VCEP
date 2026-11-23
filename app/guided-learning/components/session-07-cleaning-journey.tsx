@@ -11,8 +11,6 @@ import {
   TARGET_ASHA_TOTAL_INR,
   TARGET_BEACON_TOTAL_INR,
   CASE_B_RAW_RECEIPTS,
-  INITIAL_CLEAN_ROWS,
-  INITIAL_EXCEPTIONS,
   INITIAL_S07_STATE,
   S07_RUBRIC,
   countWords,
@@ -285,11 +283,30 @@ export function Session07CleaningJourney({
     const beaconCount = state.cleanRows.filter((r) => r.customerStandard.toLowerCase() === 'beacon').length;
 
     const reconciledSum = cleanTotal + exceptionsTotal;
-    const isReconciled = reconciledSum === RAW_TOTAL_VOLUME_INR;
     const variance = Math.abs(RAW_TOTAL_VOLUME_INR - reconciledSum);
 
-    const isCleanTargetMatched = cleanTotal === TARGET_CLEAN_TOTAL_INR && state.cleanRows.length === 3;
-    const isExceptionsTargetMatched = exceptionsTotal === TARGET_EXCEPTIONS_TOTAL_INR && state.exceptions.length === 4;
+    const expectedClean: Record<string, { amount: number; date: string; customer: string }> = {
+      R01: { amount: 12000, date: '2026-10-01', customer: 'Asha' },
+      R02: { amount: 8000, date: '2026-10-02', customer: 'Beacon' },
+      R03: { amount: 5000, date: '2026-10-03', customer: 'Asha' },
+    };
+    const isCleanTargetMatched = cleanTotal === TARGET_CLEAN_TOTAL_INR && state.cleanRows.length === 3
+      && new Set(state.cleanRows.map(row => row.sourceId)).size === 3
+      && state.cleanRows.every(row => {
+        const expected = expectedClean[row.sourceId];
+        return !!expected && row.amount === expected.amount
+          && row.isoDate === expected.date && row.customerStandard === expected.customer;
+      });
+    const expectedExceptionAmounts: Record<string, number | 'blank'> = {
+      'R02 (Row 3)': 8000, R04: 7000, R05: 'blank', R06: 4000,
+    };
+    const isExceptionsTargetMatched = exceptionsTotal === TARGET_EXCEPTIONS_TOTAL_INR && state.exceptions.length === 4
+      && new Set(state.exceptions.map(row => row.sourceId)).size === 4
+      && state.exceptions.every(row => {
+        const expected = expectedExceptionAmounts[row.sourceId];
+        return expected !== undefined && row.rawAmount === expected;
+      });
+    const isReconciled = reconciledSum === RAW_TOTAL_VOLUME_INR && isCleanTargetMatched && isExceptionsTargetMatched;
     const isAshaMatched = ashaTotal === TARGET_ASHA_TOTAL_INR;
     const isBeaconMatched = beaconTotal === TARGET_BEACON_TOTAL_INR;
 
@@ -611,7 +628,7 @@ export function Session07CleaningJourney({
             title="Find Data Issues"
             instruction="Identify specific data defects across the receipt import: duplicate export keys, invalid calendar dates, ambiguous date formats, missing amounts, and customer casing mismatches."
             whyMatters="Dirty data cascades into financial reporting errors. For example, treating a duplicate receipt as fresh cash overstates revenue, while guessing a blank invoice amount conceals unpaid receivables."
-            statusText="4 Issue Types Flagged"
+            statusText={`${Object.keys(state.decisions || {}).length} of 7 classified`}
             isActive={activeTaskId === 'S07-T02'}
             onSelectTask={() => setActiveTaskId('S07-T02')}
           >
